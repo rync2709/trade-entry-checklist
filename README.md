@@ -7,10 +7,10 @@ The current web app remains the same lightweight checklist PWA. Phase 0 adds pro
 ## Current Status
 
 - Project name: Trading OS
-- Repository name: trade-entry-checklist
+- Repository name: Trading-Companion
 - Phase: 0 - Design and Specification
 - Version: v0.0.2-alpha
-- Live checklist: https://rync2709.github.io/trade-entry-checklist/
+- Live checklist: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 0 Scope
 

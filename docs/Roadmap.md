@@ -32,7 +32,7 @@ Result:
 Current repository:
 
 ```text
-trade-entry-checklist/
+Trading-Companion/
 ```
 
 Future product name:
@@ -393,7 +393,7 @@ Expected long-term value:
 Target structure for the larger app:
 
 ```text
-trade-companion/
+Trading-Companion/
 |-- index.html
 |-- trade.html
 |-- journal.html

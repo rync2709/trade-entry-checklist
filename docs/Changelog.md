@@ -6,6 +6,7 @@ All notable changes to Trading OS will be documented in this file.
 
 ### Changed
 
+- Renamed the GitHub repository reference from `trade-entry-checklist` to `Trading-Companion`.
 - Promoted the user-provided Trading OS product plan to the master roadmap.
 - Reframed the roadmap around the web app as the main product track.
 - Added phases for core trading app, journal, statistics, trade database, weekly review, session planner, watchlist, tools, AI assistant, and TradingView integration.
