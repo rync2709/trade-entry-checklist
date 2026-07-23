@@ -1,0 +1,10 @@
+{
+  "name": "Trade Entry Checklist",
+  "short_name": "Trade Checklist",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0d10",
+  "theme_color": "#0b0d10",
+  "description": "ICT / SMC HTF to LTF trade entry checklist",
+  "icons": []
+}
