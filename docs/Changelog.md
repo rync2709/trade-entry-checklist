@@ -2,6 +2,22 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.1.1 - 2026-07-24
+
+### Added
+
+- Added WAIT, SKIP, and ENTERED decisions to the final Wizard step.
+- Added Entry, Stop Loss, Take Profit, and automatic Planned RR validation.
+- Added Open Position tracking to the Dashboard.
+- Added WIN, LOSS, and BREAK EVEN close outcomes.
+- Added lifecycle data to assessment records for the future Trade Journal.
+
+### Changed
+
+- Updated Dashboard metrics to show entered trades and open positions.
+- Extended local records without removing compatibility with v0.1.0 history.
+- Updated the PWA cache for the Phase 1.2 lifecycle release.
+
 ## v0.1.0 - 2026-07-24
 
 ### Added

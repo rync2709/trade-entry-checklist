@@ -8,10 +8,6 @@
   let draft = storage.loadDraft() || storage.createDraft();
   let currentStep = Math.min(Math.max(Number(draft.currentStep) || 0, 0), stepPanels.length - 1);
 
-  function icon(name) {
-    return `<svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-${name}"></use></svg>`;
-  }
-
   function initializeNewRequest() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("new") !== "1") return;
@@ -41,7 +37,7 @@
     });
     document.getElementById("backButton").disabled = currentStep === 0;
     document.getElementById("nextButton").hidden = currentStep === stepPanels.length - 1;
-    document.getElementById("saveButton").hidden = currentStep !== stepPanels.length - 1;
+    document.getElementById("lifecycleActions").hidden = currentStep !== stepPanels.length - 1;
     save();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -59,6 +55,9 @@
     document.getElementById("instrument").value = draft.instrument;
     document.getElementById("session").value = draft.session;
     document.getElementById("notes").value = draft.notes;
+    document.getElementById("entryPrice").value = draft.tradePlan.entry;
+    document.getElementById("stopLossPrice").value = draft.tradePlan.stopLoss;
+    document.getElementById("takeProfitPrice").value = draft.tradePlan.takeProfit;
 
     const structureLabel = document.getElementById("structureLabel");
     const structureHelp = document.getElementById("structureHelp");
@@ -73,6 +72,7 @@
 
   function renderEvaluation() {
     const evaluation = logic.evaluate(draft);
+    const tradePlan = logic.evaluateTradePlan(draft);
     const statePill = document.getElementById("railStatePill");
     statePill.dataset.state = evaluation.state;
     statePill.querySelector(".pill-copy").textContent = evaluation.stateLabel;
@@ -102,10 +102,18 @@
       });
     }
 
-    const saveButton = document.getElementById("saveButton");
-    saveButton.classList.toggle("button-primary", evaluation.state === "ready");
-    saveButton.innerHTML = `${icon("save")}<span>${evaluation.state === "ready" ? "ยืนยันและบันทึกแผน" : "บันทึกการประเมิน"}</span>`;
-    return evaluation;
+    const planStatus = document.getElementById("planStatus");
+    planStatus.dataset.complete = String(tradePlan.complete);
+    planStatus.dataset.valid = String(tradePlan.valid);
+    planStatus.querySelector("span").textContent = tradePlan.message;
+
+    const enteredButton = document.getElementById("enteredButton");
+    enteredButton.disabled = evaluation.state !== "ready" || !tradePlan.valid;
+    enteredButton.title = evaluation.state !== "ready" ?
+      "Setup ต้องเป็น READY TO ENTER ก่อน" :
+      !tradePlan.valid ? tradePlan.message : "บันทึกเป็น Open Position";
+
+    return { evaluation, tradePlan };
   }
 
   function render() {
@@ -119,7 +127,7 @@
     });
     document.getElementById("backButton").disabled = currentStep === 0;
     document.getElementById("nextButton").hidden = currentStep === stepPanels.length - 1;
-    document.getElementById("saveButton").hidden = currentStep !== stepPanels.length - 1;
+    document.getElementById("lifecycleActions").hidden = currentStep !== stepPanels.length - 1;
     save();
   }
 
@@ -156,6 +164,18 @@
     save();
   });
 
+  [
+    ["entryPrice", "entry"],
+    ["stopLossPrice", "stopLoss"],
+    ["takeProfitPrice", "takeProfit"]
+  ].forEach(function ([inputId, planKey]) {
+    document.getElementById(inputId).addEventListener("input", function (event) {
+      draft.tradePlan[planKey] = event.target.value;
+      renderEvaluation();
+      save();
+    });
+  });
+
   document.getElementById("backButton").addEventListener("click", function () {
     setCurrentStep(currentStep - 1);
   });
@@ -172,9 +192,34 @@
     render();
   });
 
-  document.getElementById("saveButton").addEventListener("click", function () {
-    const evaluation = renderEvaluation();
-    storage.saveAssessment(draft, evaluation);
+  document.getElementById("waitButton").addEventListener("click", function () {
+    save();
+    window.location.href = "index.html";
+  });
+
+  document.getElementById("skipButton").addEventListener("click", function () {
+    const result = renderEvaluation();
+    storage.saveAssessment(draft, result.evaluation, {
+      decision: "skip",
+      tradePlan: {
+        ...draft.tradePlan,
+        plannedRr: result.tradePlan.rr
+      }
+    });
+    storage.clearDraft();
+    window.location.href = "index.html";
+  });
+
+  document.getElementById("enteredButton").addEventListener("click", function () {
+    const result = renderEvaluation();
+    if (result.evaluation.state !== "ready" || !result.tradePlan.valid) return;
+    storage.saveAssessment(draft, result.evaluation, {
+      decision: "entered",
+      tradePlan: {
+        ...draft.tradePlan,
+        plannedRr: result.tradePlan.rr
+      }
+    });
     storage.clearDraft();
     window.location.href = "index.html";
   });

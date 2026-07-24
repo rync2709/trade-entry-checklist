@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.1.0
+Version: v0.1.1
 Status: Master product roadmap
 
 ## Product Direction
@@ -58,9 +58,11 @@ First milestone:
 - [x] Add initial score, grade, and blocking-reason logic.
 - [x] Preserve the original checklist as the Classic Checklist.
 - [x] Update the PWA shell and offline cache for Phase 1 pages.
+- [x] Add WAIT, SKIP, and ENTERED lifecycle decisions.
+- [x] Add Entry, Stop Loss, Take Profit, and Planned RR.
+- [x] Add open-position tracking and close outcomes.
+- [x] Add the initial lifecycle record for the Phase 2 journal handoff.
 - [ ] Calibrate scoring weights against real trade examples.
-- [ ] Add open-position tracking.
-- [ ] Complete the Phase 1 journal handoff after entry.
 - [ ] Validate the workflow through repeated real-use sessions.
 
 ### Dashboard
@@ -472,6 +474,7 @@ Expected outputs:
 | v0.0.1-alpha | Phase 0 documentation baseline |
 | v0.0.2-alpha | Master product roadmap |
 | v0.1.0 | Core dashboard and new trade wizard draft |
+| v0.1.1 | Trade lifecycle and open-position tracking |
 | v0.2.0 | Decision engine and grading draft |
 | v0.3.0 | Trade journal |
 | v0.4.0 | Statistics dashboard |

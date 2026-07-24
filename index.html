@@ -104,15 +104,41 @@
           <div class="metric-footnote">รายการที่ประเมินวันนี้</div>
         </article>
         <article class="metric">
-          <div class="metric-label">Ready setups</div>
-          <div class="metric-value" id="readyCount">0</div>
-          <div class="metric-footnote">ผ่านเงื่อนไขครบวันนี้</div>
+          <div class="metric-label">Entered today</div>
+          <div class="metric-value" id="enteredCount">0</div>
+          <div class="metric-footnote">รายการที่บันทึกว่าเข้าเทรด</div>
+        </article>
+        <article class="metric">
+          <div class="metric-label">Open positions</div>
+          <div class="metric-value" id="openCount">0</div>
+          <div class="metric-footnote">สถานะที่ยังไม่ปิดผล</div>
         </article>
         <article class="metric">
           <div class="metric-label">Current session</div>
           <div class="metric-value" id="sessionName">--</div>
           <div class="metric-footnote" id="sessionNote">เวลาอ้างอิงกรุงเทพฯ</div>
         </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="positionsHeading">
+      <div class="section-heading">
+        <div>
+          <h2 id="positionsHeading">Open positions</h2>
+          <p>ติดตามแผนที่เข้าแล้วและบันทึกผลเมื่อสถานะสิ้นสุด</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="position-list" id="positionList"></div>
+        <div class="empty-state position-empty" id="positionEmpty">
+          <div>
+            <div class="icon-box">
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-target"></use></svg>
+            </div>
+            <h3>ไม่มี Open Position</h3>
+            <p>รายการที่เลือก `ENTERED` จาก New Trade Wizard จะปรากฏที่นี่</p>
+          </div>
+        </div>
       </div>
     </section>
 

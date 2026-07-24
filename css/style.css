@@ -341,6 +341,12 @@ h3 {
   color: var(--amber);
 }
 
+.status-pill[data-state="open"] {
+  border-color: rgba(101, 200, 208, 0.45);
+  background: var(--cyan-soft);
+  color: var(--cyan);
+}
+
 .status-pill[data-state="no-trade"] {
   border-color: rgba(255, 116, 116, 0.45);
   background: var(--red-soft);

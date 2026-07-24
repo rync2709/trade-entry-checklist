@@ -320,8 +320,30 @@
               <div><span class="question-label">การตัดสินใจครั้งนี้ปลอดจาก FOMO / Revenge Trade หรือไม่?</span><span class="question-help">ตอบตามจริง เพราะเงื่อนไขนี้มีสิทธิ์ยกเลิกแผนทันที</span></div>
               <div class="choice-group"><button class="choice" type="button" data-answer-key="emotionalClear" data-value="yes" aria-pressed="false">ปลอด</button><button class="choice" type="button" data-answer-key="emotionalClear" data-value="no" aria-pressed="false">ไม่ปลอด</button></div>
             </div>
+            <fieldset class="trade-plan">
+              <legend>Trade plan</legend>
+              <p>กรอกราคาตามแผน ระบบจะคำนวณ Planned RR และตรวจตำแหน่ง SL/TP ตาม Direction</p>
+              <div class="plan-grid">
+                <div class="field">
+                  <label for="entryPrice">Entry</label>
+                  <input id="entryPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="0.00">
+                </div>
+                <div class="field">
+                  <label for="stopLossPrice">Stop Loss</label>
+                  <input id="stopLossPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="0.00">
+                </div>
+                <div class="field">
+                  <label for="takeProfitPrice">Take Profit</label>
+                  <input id="takeProfitPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="0.00">
+                </div>
+              </div>
+              <div class="plan-status" id="planStatus" data-valid="false">
+                <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-target"></use></svg>
+                <span>กรอก Entry, Stop Loss และ Take Profit ให้ครบ</span>
+              </div>
+            </fieldset>
             <div class="decision-row">
-              <div class="field" style="width: 100%;">
+              <div class="field field-full">
                 <label for="notes">Trade notes</label>
                 <textarea id="notes" placeholder="HTF narrative, POI, ลำดับ Confirmation, Entry และเหตุผลที่ยกเลิก Setup..."></textarea>
               </div>
@@ -329,22 +351,37 @@
           </div>
         </section>
 
-        <footer class="wizard-footer panel" style="margin-top: 14px;">
-          <span class="save-state" id="saveState">บันทึกอัตโนมัติ</span>
-          <div class="wizard-footer-group">
-            <button class="button" id="backButton" type="button" disabled>
-              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-left"></use></svg>
-              <span>ย้อนกลับ</span>
+        <footer class="wizard-controls panel">
+          <div class="wizard-footer">
+            <span class="save-state" id="saveState">บันทึกอัตโนมัติ</span>
+            <div class="wizard-footer-group">
+              <button class="button" id="backButton" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-left"></use></svg>
+                <span>ย้อนกลับ</span>
+              </button>
+              <button class="button button-primary" id="nextButton" type="button">
+                <span>ถัดไป</span>
+                <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-right"></use></svg>
+              </button>
+            </div>
+          </div>
+          <div class="lifecycle-actions" id="lifecycleActions" hidden>
+            <button class="button lifecycle-button" id="waitButton" type="button" title="บันทึก Draft และกลับไป Dashboard">
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-clock"></use></svg>
+              <span>WAIT</span>
             </button>
-            <button class="button button-primary" id="nextButton" type="button">
-              <span>ถัดไป</span>
-              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-right"></use></svg>
+            <button class="button lifecycle-button" id="skipButton" type="button" title="จบการประเมินโดยไม่เข้าเทรด">
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-x"></use></svg>
+              <span>SKIP</span>
             </button>
-            <button class="button" id="saveButton" type="button" hidden></button>
+            <button class="button button-primary lifecycle-button" id="enteredButton" type="button" title="บันทึกเป็น Open Position" disabled>
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-check"></use></svg>
+              <span>ENTERED</span>
+            </button>
           </div>
         </footer>
 
-        <footer class="wizard-footer panel" style="margin-top: 14px;">
+        <footer class="wizard-footer panel secondary-footer">
           <button class="button button-quiet button-danger" id="resetButton" type="button">
             <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-rotate"></use></svg>
             ล้าง Draft
@@ -367,7 +404,7 @@
         </section>
         <section class="rail-section">
           <div class="rail-label">Progress</div>
-          <div class="progress-copy"><span>Setup maturity</span><span id="railProgressCopy">0 / 24</span></div>
+          <div class="progress-copy"><span>Setup maturity</span><span id="railProgressCopy">0 / 23</span></div>
           <div class="progress-track"><div class="progress-value" id="railProgress"></div></div>
         </section>
         <section class="rail-section">

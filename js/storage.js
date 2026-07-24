@@ -34,6 +34,11 @@
       direction: "",
       setupType: "",
       answers: {},
+      tradePlan: {
+        entry: "",
+        stopLoss: "",
+        takeProfit: ""
+      },
       notes: ""
     };
   }
@@ -44,7 +49,11 @@
     return {
       ...base,
       ...draft,
-      answers: draft.answers && typeof draft.answers === "object" ? draft.answers : {}
+      answers: draft.answers && typeof draft.answers === "object" ? draft.answers : {},
+      tradePlan: {
+        ...base.tradePlan,
+        ...(draft.tradePlan && typeof draft.tradePlan === "object" ? draft.tradePlan : {})
+      }
     };
   }
 
@@ -71,6 +80,7 @@
     return Boolean(
       draft.direction ||
       draft.notes ||
+      Object.values(draft.tradePlan || {}).some(Boolean) ||
       Object.keys(draft.answers || {}).length
     );
   }
@@ -80,18 +90,37 @@
     return Array.isArray(saved) ? saved : [];
   }
 
-  function saveAssessment(draft, evaluation) {
+  function saveAssessment(draft, evaluation, options) {
     const history = loadHistory();
+    const decision = options && options.decision ? options.decision : "reviewed";
+    const now = new Date().toISOString();
+    const tradePlan = options && options.tradePlan ? options.tradePlan : draft.tradePlan;
+    const lifecycleStatus = decision === "entered" ? "open" :
+      decision === "skip" ? "skipped" : "reviewed";
     const record = {
       id: draft.id || createId(),
       createdAt: draft.createdAt || new Date().toISOString(),
-      savedAt: new Date().toISOString(),
+      savedAt: now,
       instrument: draft.instrument,
       session: draft.session,
       direction: draft.direction,
       setupType: draft.setupType,
       answers: { ...draft.answers },
+      tradePlan: {
+        entry: tradePlan && tradePlan.entry ? String(tradePlan.entry) : "",
+        stopLoss: tradePlan && tradePlan.stopLoss ? String(tradePlan.stopLoss) : "",
+        takeProfit: tradePlan && tradePlan.takeProfit ? String(tradePlan.takeProfit) : "",
+        plannedRr: tradePlan && Number.isFinite(Number(tradePlan.plannedRr)) ?
+          Number(tradePlan.plannedRr) : null
+      },
       notes: draft.notes || "",
+      lifecycle: {
+        decision,
+        status: lifecycleStatus,
+        openedAt: decision === "entered" ? now : null,
+        closedAt: null,
+        outcome: null
+      },
       result: {
         state: evaluation.state,
         score: evaluation.score,
@@ -104,6 +133,36 @@
     return record;
   }
 
+  function loadOpenPositions() {
+    return loadHistory().filter(function (item) {
+      return item.lifecycle && item.lifecycle.status === "open";
+    });
+  }
+
+  function closePosition(id, outcome) {
+    const allowed = ["win", "loss", "break-even"];
+    if (!allowed.includes(outcome)) return null;
+
+    let updated = null;
+    const next = loadHistory().map(function (item) {
+      if (item.id !== id || !item.lifecycle || item.lifecycle.status !== "open") {
+        return item;
+      }
+      updated = {
+        ...item,
+        lifecycle: {
+          ...item.lifecycle,
+          status: "closed",
+          outcome,
+          closedAt: new Date().toISOString()
+        }
+      };
+      return updated;
+    });
+    localStorage.setItem(KEYS.history, JSON.stringify(next));
+    return updated;
+  }
+
   window.TradingStorage = {
     KEYS,
     createDraft,
@@ -112,6 +171,8 @@
     clearDraft,
     hasMeaningfulDraft,
     loadHistory,
-    saveAssessment
+    saveAssessment,
+    loadOpenPositions,
+    closePosition
   };
 })();

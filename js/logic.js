@@ -156,6 +156,50 @@
     return "--";
   }
 
+  function evaluateTradePlan(draft) {
+    const plan = draft.tradePlan || {};
+    const entry = Number(plan.entry);
+    const stopLoss = Number(plan.stopLoss);
+    const takeProfit = Number(plan.takeProfit);
+    const complete = [entry, stopLoss, takeProfit].every(Number.isFinite) &&
+      entry > 0 && stopLoss > 0 && takeProfit > 0;
+
+    if (!complete) {
+      return {
+        complete: false,
+        valid: false,
+        rr: null,
+        message: "กรอก Entry, Stop Loss และ Take Profit ให้ครบ"
+      };
+    }
+
+    const risk = Math.abs(entry - stopLoss);
+    const reward = draft.direction === "bullish" ?
+      takeProfit - entry :
+      draft.direction === "bearish" ? entry - takeProfit : 0;
+    const stopIsValid = draft.direction === "bullish" ?
+      stopLoss < entry :
+      draft.direction === "bearish" ? stopLoss > entry : false;
+    const targetIsValid = reward > 0;
+    const rr = risk > 0 && reward > 0 ? reward / risk : null;
+
+    if (!stopIsValid || !targetIsValid || !rr) {
+      return {
+        complete: true,
+        valid: false,
+        rr: null,
+        message: "ตำแหน่ง Entry, SL และ TP ไม่สอดคล้องกับ Trade Direction"
+      };
+    }
+
+    return {
+      complete: true,
+      valid: true,
+      rr: Math.round(rr * 100) / 100,
+      message: `Planned RR 1:${(Math.round(rr * 100) / 100).toFixed(2)}`
+    };
+  }
+
   function evaluate(draft) {
     const score = calculateScore(draft);
     const blockers = getBlockers(draft);
@@ -195,6 +239,7 @@
   window.TradingLogic = {
     STEPS,
     evaluate,
+    evaluateTradePlan,
     isStepComplete
   };
 })();

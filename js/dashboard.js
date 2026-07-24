@@ -37,6 +37,107 @@
     }).format(new Date(value));
   }
 
+  function directionLabel(direction) {
+    if (direction === "bullish") return "Bullish";
+    if (direction === "bearish") return "Bearish";
+    return "No bias";
+  }
+
+  function recordStatus(item) {
+    const lifecycle = item.lifecycle;
+    if (lifecycle && lifecycle.status === "open") return { label: "OPEN", state: "open" };
+    if (lifecycle && lifecycle.status === "skipped") return { label: "SKIPPED", state: "waiting" };
+    if (lifecycle && lifecycle.status === "closed") {
+      if (lifecycle.outcome === "win") return { label: "WIN", state: "ready" };
+      if (lifecycle.outcome === "loss") return { label: "LOSS", state: "no-trade" };
+      return { label: "BREAK EVEN", state: "developing" };
+    }
+    if (item.result.state === "ready") return { label: "READY", state: "ready" };
+    if (item.result.state === "no-trade") return { label: "NO TRADE", state: "no-trade" };
+    return { label: "REVIEWED", state: "waiting" };
+  }
+
+  function formatPlanValue(value) {
+    return value === null || value === undefined || value === "" ? "--" : String(value);
+  }
+
+  function renderOpenPositions(positions) {
+    const list = document.getElementById("positionList");
+    const empty = document.getElementById("positionEmpty");
+    list.replaceChildren();
+
+    if (!positions.length) {
+      empty.hidden = false;
+      return;
+    }
+
+    empty.hidden = true;
+    positions.forEach(function (item) {
+      const row = document.createElement("article");
+      row.className = "position-row";
+
+      const detail = document.createElement("div");
+      const heading = document.createElement("div");
+      heading.className = "position-heading";
+      const instrument = document.createElement("strong");
+      instrument.textContent = item.instrument || "ไม่ระบุสินทรัพย์";
+      const status = document.createElement("span");
+      status.className = "status-pill";
+      status.dataset.state = "open";
+      status.textContent = "OPEN";
+      heading.append(instrument, status);
+
+      const meta = document.createElement("div");
+      meta.className = "position-meta";
+      const setup = item.setupType === "continuation" ? "Continuation" : "Reversal";
+      meta.textContent = `${directionLabel(item.direction)} · ${setup} · เปิด ${formatDate(item.lifecycle.openedAt)}`;
+
+      const plan = document.createElement("div");
+      plan.className = "position-plan";
+      [
+        ["Entry", formatPlanValue(item.tradePlan && item.tradePlan.entry)],
+        ["Stop Loss", formatPlanValue(item.tradePlan && item.tradePlan.stopLoss)],
+        ["Take Profit", formatPlanValue(item.tradePlan && item.tradePlan.takeProfit)],
+        ["Planned RR", item.tradePlan && item.tradePlan.plannedRr ?
+          `1:${Number(item.tradePlan.plannedRr).toFixed(2)}` : "--"]
+      ].forEach(function ([label, value]) {
+        const cell = document.createElement("div");
+        const labelElement = document.createElement("span");
+        labelElement.textContent = label;
+        const valueElement = document.createElement("strong");
+        valueElement.textContent = value;
+        cell.append(labelElement, valueElement);
+        plan.appendChild(cell);
+      });
+
+      detail.append(heading, meta, plan);
+
+      const result = document.createElement("div");
+      result.className = "position-result";
+      const resultLabel = document.createElement("div");
+      resultLabel.className = "position-result-label";
+      resultLabel.textContent = "ปิดผลของ Position";
+      const control = document.createElement("div");
+      control.className = "result-control";
+      [
+        ["win", "WIN"],
+        ["loss", "LOSS"],
+        ["break-even", "BE"]
+      ].forEach(function ([outcome, label]) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "result-button";
+        button.dataset.closePosition = item.id;
+        button.dataset.outcome = outcome;
+        button.textContent = label;
+        control.appendChild(button);
+      });
+      result.append(resultLabel, control);
+      row.append(detail, result);
+      list.appendChild(row);
+    });
+  }
+
   function renderHistory(history) {
     const list = document.getElementById("historyList");
     const empty = document.getElementById("historyEmpty");
@@ -62,17 +163,15 @@
 
       const status = document.createElement("span");
       status.className = "status-pill";
-      status.dataset.state = item.result.state;
-      status.textContent = item.result.state === "ready" ? "READY" :
-        item.result.state === "no-trade" ? "NO TRADE" : "REVIEWED";
+      const statusData = recordStatus(item);
+      status.dataset.state = statusData.state;
+      status.textContent = statusData.label;
       primary.appendChild(status);
 
       const meta = document.createElement("div");
       meta.className = "history-meta";
-      const direction = item.direction === "bullish" ? "Bullish" :
-        item.direction === "bearish" ? "Bearish" : "No bias";
       const setup = item.setupType === "continuation" ? "Continuation" : "Reversal";
-      meta.textContent = `${direction} · ${setup} · ${formatDate(item.savedAt)}`;
+      meta.textContent = `${directionLabel(item.direction)} · ${setup} · ${formatDate(item.savedAt)}`;
 
       info.append(primary, meta);
 
@@ -95,13 +194,17 @@
     const hasDraft = storage.hasMeaningfulDraft(draft);
     const evaluation = draft ? logic.evaluate(draft) : null;
     const history = storage.loadHistory();
+    const openPositions = storage.loadOpenPositions();
     const today = localDateKey(new Date());
     const todayHistory = history.filter((item) => localDateKey(item.savedAt) === today);
-    const readyToday = todayHistory.filter((item) => item.result.state === "ready").length;
+    const enteredToday = todayHistory.filter((item) =>
+      item.lifecycle && item.lifecycle.decision === "entered"
+    ).length;
     const session = currentSession();
 
     document.getElementById("todayCount").textContent = String(todayHistory.length);
-    document.getElementById("readyCount").textContent = String(readyToday);
+    document.getElementById("enteredCount").textContent = String(enteredToday);
+    document.getElementById("openCount").textContent = String(openPositions.length);
     document.getElementById("sessionName").textContent = session[0];
     document.getElementById("sessionNote").textContent = session[1];
 
@@ -149,8 +252,22 @@
       row.querySelector(".pipeline-state").textContent = step && step.complete ? "COMPLETE" : "WAITING";
     });
 
+    renderOpenPositions(openPositions);
     renderHistory(history);
   }
+
+  document.addEventListener("click", function (event) {
+    const button = event.target.closest("[data-close-position]");
+    if (!button) return;
+    const outcomeLabel = {
+      win: "WIN",
+      loss: "LOSS",
+      "break-even": "BREAK EVEN"
+    }[button.dataset.outcome];
+    if (!window.confirm(`ปิด Position นี้เป็น ${outcomeLabel} หรือไม่?`)) return;
+    storage.closePosition(button.dataset.closePosition, button.dataset.outcome);
+    render();
+  });
 
   render();
 })();
