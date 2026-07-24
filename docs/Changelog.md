@@ -2,6 +2,23 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.5.0 - 2026-07-24
+
+### Added
+
+- Added Monday-to-Sunday Weekly Review navigation using Asia/Bangkok close dates.
+- Added weekly Closed Trades, Win Rate, Net R, Expectancy, Average RR, and R Coverage.
+- Added seven-day Winning, Losing, Break Even, and Needs R summaries.
+- Added weekly mistake totals and evidence-based Strengths and Focus Areas.
+- Added saved reflection fields for strengths, improvements, and next-week focus.
+- Added a Dashboard reminder for open, due, and saved Weekly Reviews.
+- Added a mobile More menu for Database, Weekly Review, and Classic Checklist.
+
+### Changed
+
+- Started Phase 5 while real-use validation continues for earlier phases.
+- Updated primary desktop navigation and the PWA cache for Weekly Review.
+
 ## v0.4.0 - 2026-07-24
 
 ### Added

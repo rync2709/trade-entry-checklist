@@ -3,7 +3,8 @@
 
   const KEYS = {
     draft: "tradingCompanionDraftV1",
-    history: "tradingCompanionHistoryV1"
+    history: "tradingCompanionHistoryV1",
+    weeklyReviews: "tradingCompanionWeeklyReviewsV1"
   };
   const VALIDATION_TARGET = 20;
   const JOURNAL_EMOTIONS = ["calm", "neutral", "fearful", "angry", "overconfident"];
@@ -239,6 +240,50 @@
     return loadHistory().filter(isEnteredRecord);
   }
 
+  function normalizeWeeklyReview(review, weekStart) {
+    const source = review && typeof review === "object" ? review : {};
+    return {
+      weekStart: typeof weekStart === "string" ? weekStart : "",
+      strengths: typeof source.strengths === "string" ?
+        source.strengths.trim().slice(0, 2000) : "",
+      improvements: typeof source.improvements === "string" ?
+        source.improvements.trim().slice(0, 2000) : "",
+      nextFocus: typeof source.nextFocus === "string" ?
+        source.nextFocus.trim().slice(0, 2000) : "",
+      updatedAt: typeof source.updatedAt === "string" ? source.updatedAt : null
+    };
+  }
+
+  function loadWeeklyReviews() {
+    const saved = parse(localStorage.getItem(KEYS.weeklyReviews), {});
+    if (!saved || typeof saved !== "object" || Array.isArray(saved)) return {};
+    return Object.keys(saved).reduce(function (reviews, weekStart) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(weekStart)) return reviews;
+      reviews[weekStart] = normalizeWeeklyReview(saved[weekStart], weekStart);
+      return reviews;
+    }, {});
+  }
+
+  function loadWeeklyReview(weekStart) {
+    if (typeof weekStart !== "string") return normalizeWeeklyReview(null, "");
+    const reviews = loadWeeklyReviews();
+    return normalizeWeeklyReview(reviews[weekStart], weekStart);
+  }
+
+  function saveWeeklyReview(weekStart, review) {
+    if (typeof weekStart !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(weekStart)) {
+      return null;
+    }
+    const reviews = loadWeeklyReviews();
+    const next = normalizeWeeklyReview({
+      ...review,
+      updatedAt: new Date().toISOString()
+    }, weekStart);
+    reviews[weekStart] = next;
+    localStorage.setItem(KEYS.weeklyReviews, JSON.stringify(reviews));
+    return next;
+  }
+
   function saveJournalReview(id, review) {
     const source = review && typeof review === "object" ? review : {};
     const url = typeof source.tradingViewUrl === "string" ? source.tradingViewUrl.trim() : "";
@@ -446,6 +491,10 @@
     saveAssessment,
     loadOpenPositions,
     loadJournalTrades,
+    normalizeWeeklyReview,
+    loadWeeklyReviews,
+    loadWeeklyReview,
+    saveWeeklyReview,
     saveJournalReview,
     saveJournalScreenshot,
     calculateRealizedRr,

@@ -20,7 +20,7 @@
         <img src="assets/app-icon.svg" alt="">
         <span class="brand-copy">
           <span class="brand-name">Trading Companion</span>
-          <span class="brand-phase">Trading OS · Phase 4</span>
+          <span class="brand-phase">Trading OS · Phase 5</span>
         </span>
       </a>
 
@@ -44,6 +44,10 @@
         <a class="nav-link" href="database.html">
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-database"></use></svg>
           Database
+        </a>
+        <a class="nav-link" href="weekly.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-calendar-check"></use></svg>
+          Weekly Review
         </a>
         <a class="nav-link nav-secondary" href="checklist.html">
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
@@ -152,6 +156,26 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="section" aria-labelledby="weeklyPromptHeading">
+      <article class="panel review-prompt">
+        <div class="review-prompt-icon">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-calendar-check"></use></svg>
+        </div>
+        <div class="review-prompt-copy">
+          <span class="status-pill" id="weeklyPromptState" data-state="waiting">
+            <span class="status-dot"></span>
+            <span class="pill-copy">OPEN FOR PLANNING</span>
+          </span>
+          <h2 id="weeklyPromptHeading">Weekly Review</h2>
+          <p id="weeklyPromptMessage">สรุปผลจาก Journal และกำหนดจุดโฟกัสสำหรับสัปดาห์ถัดไป</p>
+        </div>
+        <a class="button" id="weeklyPromptAction" href="weekly.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-right"></use></svg>
+          <span>เปิด Weekly Review</span>
+        </a>
+      </article>
     </section>
 
     <section class="section" aria-labelledby="validationHeading">
@@ -269,10 +293,26 @@
       <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-chart"></use></svg>
       Statistics
     </a>
-    <a class="nav-link" href="database.html">
-      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-database"></use></svg>
-      Database
-    </a>
+    <details class="mobile-more">
+      <summary class="nav-link">
+        <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-more"></use></svg>
+        More
+      </summary>
+      <div class="mobile-more-menu">
+        <a class="nav-link" href="database.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-database"></use></svg>
+          Database
+        </a>
+        <a class="nav-link" href="weekly.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-calendar-check"></use></svg>
+          Weekly Review
+        </a>
+        <a class="nav-link" href="checklist.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
+          Classic Checklist
+        </a>
+      </div>
+    </details>
   </nav>
 
   <script src="js/storage.js"></script>

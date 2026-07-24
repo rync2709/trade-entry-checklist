@@ -27,6 +27,19 @@
     return ["Off session", "รอ Session ตามแผน"];
   }
 
+  function currentWeekStart() {
+    const key = localDateKey(new Date());
+    const values = key.split("-").map(Number);
+    const date = new Date(Date.UTC(values[0], values[1] - 1, values[2], 12));
+    const mondayOffset = (date.getUTCDay() + 6) % 7;
+    date.setUTCDate(date.getUTCDate() - mondayOffset);
+    return [
+      String(date.getUTCFullYear()).padStart(4, "0"),
+      String(date.getUTCMonth() + 1).padStart(2, "0"),
+      String(date.getUTCDate()).padStart(2, "0")
+    ].join("-");
+  }
+
   function formatDate(value) {
     return new Intl.DateTimeFormat("th-TH", {
       timeZone: "Asia/Bangkok",
@@ -251,12 +264,45 @@
       item.lifecycle && item.lifecycle.decision === "entered"
     ).length;
     const session = currentSession();
+    const weekStart = currentWeekStart();
+    const weekEndDate = new Date(`${weekStart}T12:00:00Z`);
+    weekEndDate.setUTCDate(weekEndDate.getUTCDate() + 6);
+    const weekEnd = weekEndDate.toISOString().slice(0, 10);
+    const weeklyReview = storage.loadWeeklyReview(weekStart);
+    const weeklyClosed = storage.loadJournalTrades().filter(function (item) {
+      if (!item.lifecycle || item.lifecycle.status !== "closed") return false;
+      const closedDate = localDateKey(item.lifecycle.closedAt);
+      return closedDate >= weekStart && closedDate <= weekEnd;
+    }).length;
 
     document.getElementById("todayCount").textContent = String(todayHistory.length);
     document.getElementById("enteredCount").textContent = String(enteredToday);
     document.getElementById("openCount").textContent = String(openPositions.length);
     document.getElementById("sessionName").textContent = session[0];
     document.getElementById("sessionNote").textContent = session[1];
+
+    const weeklyPromptState = document.getElementById("weeklyPromptState");
+    const weeklyPromptMessage = document.getElementById("weeklyPromptMessage");
+    const weeklyPromptAction = document.getElementById("weeklyPromptAction");
+    if (weeklyReview.updatedAt) {
+      weeklyPromptState.dataset.state = "ready";
+      weeklyPromptState.querySelector(".pill-copy").textContent = "REVIEW SAVED";
+      weeklyPromptMessage.textContent =
+        `ทบทวนสัปดาห์นี้แล้ว พร้อมข้อมูล ${weeklyClosed} Closed Trade`;
+      weeklyPromptAction.querySelector("span").textContent = "ดู Weekly Review";
+    } else if (weeklyClosed) {
+      weeklyPromptState.dataset.state = "developing";
+      weeklyPromptState.querySelector(".pill-copy").textContent = "REVIEW DUE";
+      weeklyPromptMessage.textContent =
+        `มี ${weeklyClosed} Closed Trade รอสรุปเป็นบทเรียนประจำสัปดาห์`;
+      weeklyPromptAction.querySelector("span").textContent = "เริ่ม Weekly Review";
+    } else {
+      weeklyPromptState.dataset.state = "waiting";
+      weeklyPromptState.querySelector(".pill-copy").textContent = "OPEN FOR PLANNING";
+      weeklyPromptMessage.textContent =
+        "ยังไม่มี Closed Trade สัปดาห์นี้ แต่สามารถบันทึกแผนและจุดโฟกัสได้";
+      weeklyPromptAction.querySelector("span").textContent = "เปิด Weekly Review";
+    }
 
     const validationState = validation.validated >= validation.target ? "ready" :
       validation.validated >= 10 ? "developing" : "waiting";

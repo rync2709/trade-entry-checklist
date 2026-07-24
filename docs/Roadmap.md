@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.4.0
+Version: v0.5.0
 Status: Master product roadmap
 
 ## Product Direction
@@ -269,6 +269,20 @@ Expected result:
 
 Goal: help the trader review performance every week.
 
+Status: In progress.
+
+First milestone:
+
+- [x] Add Monday-to-Sunday review navigation using Asia/Bangkok close dates.
+- [x] Add Closed Trades, Win Rate, Net R, Expectancy, Average RR, and R Coverage.
+- [x] Add a seven-day result strip with explicit incomplete-R states.
+- [x] Aggregate recorded Journal mistakes for the selected week.
+- [x] Generate evidence-based Strengths and Focus Areas.
+- [x] Save strengths, improvements, and next-week focus per week.
+- [x] Add a current-week review reminder to the Dashboard.
+- [x] Add a scalable mobile More menu for secondary product areas.
+- [ ] Validate weekly insights against a larger real-trade sample.
+
 Weekly review summary:
 
 - Trades
@@ -520,12 +534,12 @@ Expected outputs:
 | v0.0.2-alpha | Master product roadmap |
 | v0.1.0 | Core dashboard and new trade wizard draft |
 | v0.1.1 | Trade lifecycle and open-position tracking |
-| v0.2.0 | Decision engine and grading draft |
-| v0.3.0 | Trade journal |
-| v0.4.0 | Statistics dashboard |
-| v0.5.0 | Trade database and filters |
-| v0.6.0 | Weekly review |
-| v0.7.0 | Session planner and watchlist |
+| v0.2.0 | Trade journal |
+| v0.3.0 | Statistics dashboard |
+| v0.4.0 | Trade database and filters |
+| v0.5.0 | Weekly review |
+| v0.6.0 | Session planner |
+| v0.7.0 | Watchlist |
 | v0.8.0 | Advanced tools |
 | v0.9.0 | AI decision assistant prototype |
 | v1.0.0 | Trading OS MVP |

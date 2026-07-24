@@ -259,6 +259,41 @@
   line-height: 1.4;
 }
 
+.review-prompt {
+  min-height: 116px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.review-prompt-icon {
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-raised);
+  color: var(--green);
+  display: grid;
+  place-items: center;
+}
+
+.review-prompt-copy {
+  min-width: 0;
+}
+
+.review-prompt-copy h2 {
+  margin: 9px 0 3px;
+}
+
+.review-prompt-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .validation-panel {
   display: grid;
   grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.4fr);
@@ -526,6 +561,20 @@
 }
 
 @media (max-width: 600px) {
+  .review-prompt {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .review-prompt-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .review-prompt > .button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
   .decision-panel,
   .grade-panel {
     min-height: 0;

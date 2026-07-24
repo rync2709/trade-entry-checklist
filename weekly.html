@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e1112">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Trading Companion">
+  <title>Weekly Review | Trading Companion</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=0.5.0">
+  <link rel="stylesheet" href="css/weekly.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html" aria-label="Trading Companion Dashboard">
+        <img src="assets/app-icon.svg" alt="">
+        <span class="brand-copy">
+          <span class="brand-name">Trading Companion</span>
+          <span class="brand-phase">Trading OS · Phase 5</span>
+        </span>
+      </a>
+
+      <nav class="topnav" aria-label="เมนูหลัก">
+        <a class="nav-link" href="index.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-home"></use></svg>
+          Dashboard
+        </a>
+        <a class="nav-link" href="trade.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+          New Trade
+        </a>
+        <a class="nav-link" href="journal.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
+          Journal
+        </a>
+        <a class="nav-link" href="stats.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-chart"></use></svg>
+          Statistics
+        </a>
+        <a class="nav-link" href="database.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-database"></use></svg>
+          Database
+        </a>
+        <a class="nav-link" href="weekly.html" aria-current="page">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-calendar-check"></use></svg>
+          Weekly Review
+        </a>
+        <a class="nav-link nav-secondary" href="checklist.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
+          Classic Checklist
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <header class="weekly-heading">
+      <div class="page-heading">
+        <p class="eyebrow">Weekly learning loop</p>
+        <h1>Weekly Review</h1>
+        <p class="lede">สรุปผลจาก Journal ให้เป็นบทเรียน และกำหนดจุดโฟกัสสำหรับสัปดาห์ถัดไป</p>
+      </div>
+      <div class="week-controls" aria-label="เลือกสัปดาห์">
+        <button class="button button-quiet week-icon-button" id="previousWeek" type="button" title="สัปดาห์ก่อน">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-left"></use></svg>
+          <span class="sr-only">สัปดาห์ก่อน</span>
+        </button>
+        <strong class="week-label" id="weekLabel">--</strong>
+        <button class="button button-quiet week-icon-button" id="nextWeek" type="button" title="สัปดาห์ถัดไป">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-right"></use></svg>
+          <span class="sr-only">สัปดาห์ถัดไป</span>
+        </button>
+        <button class="button week-current-button" id="currentWeek" type="button">สัปดาห์นี้</button>
+      </div>
+    </header>
+
+    <section class="data-status" id="weeklyStatus" data-state="waiting" aria-live="polite">
+      <span class="status-dot"></span>
+      <span id="weeklyStatusText">กำลังอ่านข้อมูล Journal</span>
+    </section>
+
+    <section class="weekly-metrics" aria-label="สรุปผลรายสัปดาห์">
+      <article>
+        <span>Closed trades</span>
+        <strong id="weeklyTrades">0</strong>
+        <small id="weeklyOutcomeNote">ยังไม่มีผลลัพธ์</small>
+      </article>
+      <article>
+        <span>Win rate</span>
+        <strong id="weeklyWinRate">--</strong>
+        <small>ไม่นับ Break Even</small>
+      </article>
+      <article>
+        <span>Net result</span>
+        <strong id="weeklyNetR">--</strong>
+        <small>ผลรวม Realized R</small>
+      </article>
+      <article>
+        <span>Expectancy</span>
+        <strong id="weeklyExpectancy">--</strong>
+        <small>ค่า R เฉลี่ยต่อ Trade</small>
+      </article>
+      <article>
+        <span>Average RR</span>
+        <strong id="weeklyAverageRr">--</strong>
+        <small>กำไรเฉลี่ยต่อขาดทุนเฉลี่ย</small>
+      </article>
+      <article>
+        <span>R coverage</span>
+        <strong id="weeklyCoverage">0%</strong>
+        <small id="weeklyCoverageNote">ยังไม่มี Actual Exit</small>
+      </article>
+    </section>
+
+    <section class="section" aria-labelledby="dailyHeading">
+      <div class="section-heading">
+        <div>
+          <h2 id="dailyHeading">Daily Result</h2>
+          <p>ผลตามวันปิด Trade ในเวลา Bangkok</p>
+        </div>
+      </div>
+      <div class="weekly-days" id="weeklyDays"></div>
+    </section>
+
+    <section class="weekly-analysis section" aria-label="บทวิเคราะห์รายสัปดาห์">
+      <article class="panel weekly-insights">
+        <div class="weekly-panel-heading">
+          <div>
+            <h2>Evidence-based Insights</h2>
+            <p>ระบบสรุปเฉพาะสิ่งที่มีข้อมูลรองรับใน Journal</p>
+          </div>
+        </div>
+        <div class="insight-columns">
+          <section>
+            <h3>Strengths</h3>
+            <ul class="insight-list" id="weeklyStrengths"></ul>
+          </section>
+          <section>
+            <h3>Focus Areas</h3>
+            <ul class="insight-list" id="weeklyFocusAreas"></ul>
+          </section>
+        </div>
+      </article>
+
+      <article class="panel weekly-mistakes">
+        <div class="weekly-panel-heading">
+          <div>
+            <h2>Mistake Summary</h2>
+            <p>นับจากรายการที่บันทึกไว้ใน Journal</p>
+          </div>
+        </div>
+        <div class="mistake-list" id="weeklyMistakes"></div>
+      </article>
+    </section>
+
+    <section class="section" aria-labelledby="reflectionHeading">
+      <div class="section-heading">
+        <div>
+          <h2 id="reflectionHeading">Weekly Reflection</h2>
+          <p>บันทึกสั้น กระชับ และนำไปใช้ได้ในสัปดาห์ถัดไป</p>
+        </div>
+        <span class="save-state" id="weeklySaveState" aria-live="polite">ยังไม่ได้บันทึก</span>
+      </div>
+
+      <form class="panel weekly-form" id="weeklyReviewForm">
+        <label>
+          <span>สิ่งที่ทำได้ดี</span>
+          <textarea id="weeklyStrengthsInput" name="strengths" rows="4" maxlength="2000" placeholder="พฤติกรรมหรือการตัดสินใจใดที่ควรทำต่อ"></textarea>
+        </label>
+        <label>
+          <span>สิ่งที่ต้องปรับ</span>
+          <textarea id="weeklyImprovementsInput" name="improvements" rows="4" maxlength="2000" placeholder="ระบุปัญหาที่เกิดซ้ำและสาเหตุที่ควบคุมได้"></textarea>
+        </label>
+        <label>
+          <span>เป้าหมายสัปดาห์ถัดไป</span>
+          <textarea id="weeklyNextFocusInput" name="nextFocus" rows="4" maxlength="2000" placeholder="เลือก 1–2 เรื่องที่วัดผลได้"></textarea>
+        </label>
+        <div class="weekly-form-actions">
+          <span id="weeklyUpdatedAt">บันทึกไว้ในอุปกรณ์นี้</span>
+          <button class="button button-primary" type="submit">
+            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-save"></use></svg>
+            บันทึก Weekly Review
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <nav class="mobile-nav" aria-label="เมนูมือถือ">
+    <a class="nav-link" href="index.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-home"></use></svg>
+      Dashboard
+    </a>
+    <a class="nav-link" href="trade.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+      New Trade
+    </a>
+    <a class="nav-link" href="journal.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
+      Journal
+    </a>
+    <a class="nav-link" href="stats.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-chart"></use></svg>
+      Statistics
+    </a>
+    <details class="mobile-more">
+      <summary class="nav-link" aria-current="page">
+        <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-more"></use></svg>
+        More
+      </summary>
+      <div class="mobile-more-menu">
+        <a class="nav-link" href="database.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-database"></use></svg>
+          Database
+        </a>
+        <a class="nav-link" href="weekly.html" aria-current="page">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-calendar-check"></use></svg>
+          Weekly Review
+        </a>
+        <a class="nav-link" href="checklist.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
+          Classic Checklist
+        </a>
+      </div>
+    </details>
+  </nav>
+
+  <script src="js/storage.js?v=0.5.0"></script>
+  <script src="js/app.js"></script>
+  <script src="js/weekly.js"></script>
+</body>
+</html>
