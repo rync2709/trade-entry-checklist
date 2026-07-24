@@ -2,6 +2,22 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.2.0 - 2026-07-24
+
+### Added
+
+- Added the first Trade Journal page for assessments marked `ENTERED`.
+- Added All, Open, and Closed journal filters.
+- Added Emotion, Mistakes, Lesson, and TradingView link review fields.
+- Added journal summary counts for total, open, closed, and reviewed trades.
+- Added Journal navigation on desktop and mobile.
+
+### Changed
+
+- Extended lifecycle records with backward-compatible journal metadata.
+- Updated the PWA cache to include the Trade Journal.
+- Started Phase 2 while Phase 1 validation continues collecting real-use outcomes.
+
 ## v0.1.3 - 2026-07-24
 
 ### Added

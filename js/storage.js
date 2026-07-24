@@ -6,6 +6,14 @@
     history: "tradingCompanionHistoryV1"
   };
   const VALIDATION_TARGET = 20;
+  const JOURNAL_EMOTIONS = ["calm", "neutral", "fearful", "angry", "overconfident"];
+  const JOURNAL_MISTAKES = [
+    "fomo",
+    "late-entry",
+    "no-htf",
+    "ignored-cisd",
+    "ignored-displacement"
+  ];
 
   function parse(value, fallback) {
     if (!value) return fallback;
@@ -101,6 +109,38 @@
     );
   }
 
+  function normalizeJournal(journal) {
+    const source = journal && typeof journal === "object" ? journal : {};
+    const emotion = JOURNAL_EMOTIONS.includes(source.emotion) ? source.emotion : "";
+    const mistakes = Array.isArray(source.mistakes) ?
+      [...new Set(source.mistakes.filter((item) => JOURNAL_MISTAKES.includes(item)))] : [];
+    const rawTradingViewUrl = typeof source.tradingViewUrl === "string" ?
+      source.tradingViewUrl.trim().slice(0, 500) : "";
+    const tradingViewUrl = !rawTradingViewUrl || /^https?:\/\//i.test(rawTradingViewUrl) ?
+      rawTradingViewUrl : "";
+    const lesson = typeof source.lesson === "string" ? source.lesson.trim().slice(0, 2000) : "";
+
+    return {
+      emotion,
+      mistakes,
+      lesson,
+      tradingViewUrl,
+      updatedAt: typeof source.updatedAt === "string" ? source.updatedAt : null
+    };
+  }
+
+  function isEnteredRecord(item) {
+    return Boolean(
+      item &&
+      item.lifecycle &&
+      (
+        item.lifecycle.decision === "entered" ||
+        item.lifecycle.status === "open" ||
+        item.lifecycle.status === "closed"
+      )
+    );
+  }
+
   function saveAssessment(draft, evaluation, options) {
     const history = loadHistory();
     const decision = options && options.decision ? options.decision : "reviewed";
@@ -136,6 +176,7 @@
         verdict: null,
         reviewedAt: null
       },
+      journal: normalizeJournal(),
       result: {
         state: evaluation.state,
         score: evaluation.score,
@@ -155,6 +196,34 @@
     return loadHistory().filter(function (item) {
       return item.lifecycle && item.lifecycle.status === "open";
     });
+  }
+
+  function loadJournalTrades() {
+    return loadHistory().filter(isEnteredRecord);
+  }
+
+  function saveJournalReview(id, review) {
+    const source = review && typeof review === "object" ? review : {};
+    const url = typeof source.tradingViewUrl === "string" ? source.tradingViewUrl.trim() : "";
+    if (url && !/^https?:\/\//i.test(url)) return null;
+
+    const journal = normalizeJournal({
+      ...source,
+      updatedAt: new Date().toISOString()
+    });
+    let updated = null;
+    const next = loadHistory().map(function (item) {
+      if (item.id !== id || !isEnteredRecord(item)) return item;
+      updated = {
+        ...item,
+        journal
+      };
+      return updated;
+    });
+    if (!updated) return null;
+
+    localStorage.setItem(KEYS.history, JSON.stringify(next));
+    return updated;
   }
 
   function closePosition(id, outcome) {
@@ -246,8 +315,12 @@
     hasMeaningfulDraft,
     loadHistory,
     isValidationEligible,
+    normalizeJournal,
+    isEnteredRecord,
     saveAssessment,
     loadOpenPositions,
+    loadJournalTrades,
+    saveJournalReview,
     closePosition,
     reviewSkippedAssessment,
     getValidationSummary

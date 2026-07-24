@@ -475,7 +475,7 @@ h3 {
     border-top: 1px solid var(--line);
     background: rgba(14, 17, 18, 0.97);
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     backdrop-filter: blur(14px);
   }
 

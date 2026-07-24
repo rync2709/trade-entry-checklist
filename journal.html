@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e1112">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Trading Companion">
+  <title>Trade Journal | Trading Companion</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/journal.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html" aria-label="Trading Companion Dashboard">
+        <img src="assets/app-icon.svg" alt="">
+        <span class="brand-copy">
+          <span class="brand-name">Trading Companion</span>
+          <span class="brand-phase">Trading OS · Phase 2</span>
+        </span>
+      </a>
+
+      <nav class="topnav" aria-label="เมนูหลัก">
+        <a class="nav-link" href="index.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-home"></use></svg>
+          Dashboard
+        </a>
+        <a class="nav-link" href="trade.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+          New Trade
+        </a>
+        <a class="nav-link" href="journal.html" aria-current="page">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
+          Journal
+        </a>
+        <a class="nav-link" href="checklist.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
+          Classic Checklist
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <header class="page-heading">
+      <p class="eyebrow">Post-trade review</p>
+      <h1>Trade Journal</h1>
+      <p class="lede">ทบทวนอารมณ์ ความผิดพลาด และบทเรียนจาก Trade ที่เข้าแล้ว</p>
+    </header>
+
+    <section class="journal-metrics" aria-label="Journal summary">
+      <article class="journal-metric">
+        <span>Total trades</span>
+        <strong id="totalTrades">0</strong>
+      </article>
+      <article class="journal-metric">
+        <span>Open</span>
+        <strong id="openTrades">0</strong>
+      </article>
+      <article class="journal-metric">
+        <span>Closed</span>
+        <strong id="closedTrades">0</strong>
+      </article>
+      <article class="journal-metric">
+        <span>Reviewed</span>
+        <strong id="reviewedTrades">0</strong>
+      </article>
+    </section>
+
+    <section class="section" aria-labelledby="journalHeading">
+      <div class="section-heading journal-section-heading">
+        <div>
+          <h2 id="journalHeading">Entered trades</h2>
+          <p>ข้อมูลถูกเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้</p>
+        </div>
+        <div class="filter-tabs" role="group" aria-label="กรองสถานะ Trade">
+          <button type="button" data-journal-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-journal-filter="open" aria-pressed="false">Open</button>
+          <button type="button" data-journal-filter="closed" aria-pressed="false">Closed</button>
+        </div>
+      </div>
+
+      <div class="journal-list" id="journalList"></div>
+      <div class="panel empty-state" id="journalEmpty">
+        <div>
+          <div class="icon-box">
+            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
+          </div>
+          <h3 id="journalEmptyTitle">ยังไม่มี Trade ใน Journal</h3>
+          <p id="journalEmptyMessage">รายการที่เลือก `ENTERED` จาก New Trade Wizard จะปรากฏที่นี่</p>
+          <a class="button button-primary" href="trade.html">
+            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+            เริ่ม New Trade
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="mobile-nav" aria-label="เมนูมือถือ">
+    <a class="nav-link" href="index.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-home"></use></svg>
+      Dashboard
+    </a>
+    <a class="nav-link" href="trade.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+      New Trade
+    </a>
+    <a class="nav-link" href="journal.html" aria-current="page">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
+      Journal
+    </a>
+    <a class="nav-link" href="checklist.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
+      Checklist
+    </a>
+  </nav>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/journal.js"></script>
+</body>
+</html>

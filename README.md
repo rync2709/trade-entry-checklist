@@ -2,16 +2,17 @@
 
 Trading Companion is the web application for the Trading OS decision framework. It is built from the original ICT/SMC Trade Entry Checklist.
 
-Phase 1 turns the original static checklist into a guided decision workspace with a dashboard, New Trade Wizard, smart setup status, setup grade, and local assessment history.
+Trading Companion now combines the Phase 1 guided decision workflow with the first Phase 2 Trade Journal. Phase 1 score validation continues while journal features are developed.
 
 ## Current Status
 
 - Product name: Trading Companion
 - Decision framework: Trading OS
 - Repository name: Trading-Companion
-- Phase: 1 - Core Trading App (in progress)
-- Version: v0.1.3
-- Live checklist: https://rync2709.github.io/Trading-Companion/
+- Phase: 2 - Trade Journal (in progress)
+- Phase 1 validation: collecting 20 real-use outcomes
+- Version: v0.2.0
+- Live app: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 1 Milestone
 
@@ -31,12 +32,25 @@ The first Phase 1 milestone includes:
 - Phase 1 validation progress with closed outcomes and reviewed skips
 - Classic Checklist preserved at `checklist.html`
 
+## Phase 2 Milestone
+
+The first Phase 2 milestone includes:
+
+- Trade Journal for every assessment marked `ENTERED`
+- All, Open, and Closed trade filters
+- Emotion, mistake, lesson, and TradingView link fields
+- Backward-compatible journal data for existing lifecycle records
+- Local review progress summary
+
+Screenshot attachments and richer post-trade analysis remain planned.
+
 ## Repository Structure
 
 ```text
 .
 |-- index.html
 |-- trade.html
+|-- journal.html
 |-- checklist.html
 |-- manifest.json
 |-- sw.js

@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.1.3
+Version: v0.2.0
 Status: Master product roadmap
 
 ## Product Direction
@@ -127,7 +127,20 @@ Phase 1 target:
 
 Goal: record trade context, trade quality, and mistakes.
 
-Planned fields:
+Status: In progress.
+
+First milestone:
+
+- [x] Create a Journal page for assessments marked `ENTERED`.
+- [x] Show Open and Closed trades in one history.
+- [x] Add All, Open, and Closed filters.
+- [x] Add Emotion, Mistakes, Lesson, and TradingView link fields.
+- [x] Preserve compatibility with existing Phase 1 lifecycle records.
+- [x] Keep journal data local to the current browser.
+- [ ] Add screenshot attachments.
+- [ ] Add richer post-trade review fields based on real use.
+
+Journal fields:
 
 - Screenshot
 - TradingView link
