@@ -83,6 +83,38 @@
     document.getElementById("railProgress").style.width = `${evaluation.progress.percent}%`;
     document.getElementById("railProgressCopy").textContent = `${evaluation.progress.complete} / ${evaluation.progress.total}`;
 
+    const scoreBreakdown = document.getElementById("scoreBreakdownList");
+    scoreBreakdown.replaceChildren();
+    evaluation.scoreBreakdown.forEach(function (category) {
+      const item = document.createElement("div");
+      item.className = "score-category";
+      item.dataset.complete = String(category.complete === category.total);
+
+      const label = document.createElement("span");
+      label.className = "score-category-label";
+      label.textContent = category.label;
+
+      const value = document.createElement("span");
+      value.className = "score-category-value";
+      value.textContent = `${category.earned} / ${category.weight}`;
+
+      const track = document.createElement("span");
+      track.className = "score-category-track";
+      track.setAttribute("aria-hidden", "true");
+      const fill = document.createElement("span");
+      fill.className = "score-category-fill";
+      fill.style.width = `${category.percent}%`;
+      track.appendChild(fill);
+
+      const conditionCount = document.createElement("span");
+      conditionCount.className = "score-category-count";
+      conditionCount.textContent = `${category.complete}/${category.total} เงื่อนไข`;
+
+      item.append(label, value, track, conditionCount);
+      scoreBreakdown.appendChild(item);
+    });
+    document.getElementById("scoreProfile").textContent = evaluation.scoreProfile;
+
     stepTabs.forEach(function (tab, index) {
       tab.dataset.complete = String(evaluation.steps[index].complete);
     });

@@ -10,7 +10,7 @@ Phase 1 turns the original static checklist into a guided decision workspace wit
 - Decision framework: Trading OS
 - Repository name: Trading-Companion
 - Phase: 1 - Core Trading App (in progress)
-- Version: v0.1.1
+- Version: v0.1.2
 - Live checklist: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 1 Milestone
@@ -21,6 +21,7 @@ The first Phase 1 milestone includes:
 - Guided five-step New Trade Wizard
 - Smart status: WAITING, DEVELOPING, READY, and NO TRADE
 - First score and grade model based on the Phase 0 rulebook
+- Explainable score breakdown with a versioned scoring profile
 - Blocking reasons for invalid setup conditions
 - Automatic local draft saving
 - WAIT, SKIP, and ENTERED lifecycle decisions

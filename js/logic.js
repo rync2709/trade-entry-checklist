@@ -77,6 +77,58 @@
     ["emotionalClear", "no", "มี FOMO, Revenge Trade หรือกำลังฝืนเข้าเทรด"]
   ];
 
+  const SCORE_PROFILE = "score-v1";
+  const SCORE_CATEGORIES = [
+    {
+      id: "htf",
+      label: "HTF Context",
+      weight: 20,
+      keys: ["direction", "htfNarrative", "htfAligned", "priceLocation"]
+    },
+    {
+      id: "poi",
+      label: "POI",
+      weight: 15,
+      keys: ["poiPresent", "poiReached", "poiValid", "notChasing"]
+    },
+    {
+      id: "liquidity",
+      label: "Liquidity",
+      weight: 15,
+      keys: ["liquidityTarget", "sweep"]
+    },
+    {
+      id: "structure",
+      label: "Structure",
+      weight: 15,
+      keys: ["ltfMapped", "structureShift", "setupWindow"]
+    },
+    {
+      id: "cisd",
+      label: "CISD",
+      weight: 15,
+      keys: ["cisd"]
+    },
+    {
+      id: "displacement",
+      label: "Displacement",
+      weight: 10,
+      keys: ["displacement", "displacementClean"]
+    },
+    {
+      id: "fvg",
+      label: "FVG / Entry Zone",
+      weight: 5,
+      keys: ["validFvg", "retrace"]
+    },
+    {
+      id: "risk",
+      label: "Entry / Risk",
+      weight: 5,
+      keys: ["entryTrigger", "slValid", "rrValid", "emotionalClear"]
+    }
+  ];
+
   function answer(draft, key) {
     if (key === "direction") return draft.direction || "";
     if (key === "setupType") return draft.setupType || "";
@@ -87,24 +139,34 @@
     return answer(draft, key) === "yes";
   }
 
-  function fraction(draft, keys) {
-    if (!keys.length) return 0;
-    const complete = keys.filter((key) => isYes(draft, key)).length;
-    return complete / keys.length;
+  function isConditionMet(draft, key) {
+    if (key === "direction") {
+      return Boolean(draft.direction && draft.direction !== "neutral");
+    }
+    if (key === "setupType") return Boolean(draft.setupType);
+    return isYes(draft, key);
   }
 
-  function calculateScore(draft) {
-    const htfDirection = draft.direction && draft.direction !== "neutral" ? 1 : 0;
-    const htfChecks = fraction(draft, ["htfNarrative", "htfAligned", "priceLocation"]);
-    const htf = ((htfDirection + htfChecks * 3) / 4) * 20;
-    const poi = fraction(draft, ["poiPresent", "poiReached", "poiValid", "notChasing"]) * 15;
-    const liquidity = fraction(draft, ["liquidityTarget", "sweep"]) * 15;
-    const structure = fraction(draft, ["ltfMapped", "structureShift", "setupWindow"]) * 15;
-    const cisd = fraction(draft, ["cisd"]) * 15;
-    const displacement = fraction(draft, ["displacement", "displacementClean"]) * 10;
-    const fvg = fraction(draft, ["validFvg", "retrace"]) * 5;
-    const risk = fraction(draft, ["entryTrigger", "slValid", "rrValid", "emotionalClear"]) * 5;
-    return Math.round(htf + poi + liquidity + structure + cisd + displacement + fvg + risk);
+  function getScoreBreakdown(draft) {
+    return SCORE_CATEGORIES.map(function (category) {
+      const complete = category.keys.filter((key) => isConditionMet(draft, key)).length;
+      const total = category.keys.length;
+      const earned = Math.round((complete / total) * category.weight * 100) / 100;
+      return {
+        id: category.id,
+        label: category.label,
+        earned,
+        weight: category.weight,
+        complete,
+        total,
+        percent: Math.round((earned / category.weight) * 100)
+      };
+    });
+  }
+
+  function calculateScore(scoreBreakdown) {
+    const total = scoreBreakdown.reduce((sum, category) => sum + category.earned, 0);
+    return Math.round(total);
   }
 
   function getBlockers(draft) {
@@ -150,6 +212,7 @@
 
   function getGrade(score, state) {
     if (state === "no-trade") return "NO TRADE";
+    if (state !== "ready") return "--";
     if (score >= 90) return "A+";
     if (score >= 80) return "A";
     if (score >= 70) return "B";
@@ -201,7 +264,8 @@
   }
 
   function evaluate(draft) {
-    const score = calculateScore(draft);
+    const scoreBreakdown = getScoreBreakdown(draft);
+    const score = calculateScore(scoreBreakdown);
     const blockers = getBlockers(draft);
     const progress = getProgress(draft);
     const allStepsComplete = STEPS.every((_, index) => isStepComplete(draft, index));
@@ -226,6 +290,8 @@
       }[state],
       score,
       grade,
+      scoreProfile: SCORE_PROFILE,
+      scoreBreakdown,
       blockers,
       progress,
       nextAction: getNextAction(draft, blockers),
@@ -238,6 +304,8 @@
 
   window.TradingLogic = {
     STEPS,
+    SCORE_PROFILE,
+    SCORE_CATEGORIES,
     evaluate,
     evaluateTradePlan,
     isStepComplete

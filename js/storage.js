@@ -125,6 +125,9 @@
         state: evaluation.state,
         score: evaluation.score,
         grade: evaluation.grade,
+        scoreProfile: evaluation.scoreProfile || "legacy",
+        scoreBreakdown: Array.isArray(evaluation.scoreBreakdown) ?
+          evaluation.scoreBreakdown.map((category) => ({ ...category })) : [],
         blockers: [...evaluation.blockers]
       }
     };

@@ -2,6 +2,19 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.1.2 - 2026-07-24
+
+### Added
+
+- Added an eight-category score breakdown to the final Wizard step.
+- Added the `score-v1` profile to new assessment records for future calibration.
+- Added category completion counts and earned points.
+
+### Changed
+
+- Grade remains pending until the setup reaches READY TO ENTER.
+- Updated the PWA cache for the Phase 1.3 scoring release.
+
 ## v0.1.1 - 2026-07-24
 
 ### Added

@@ -1,7 +1,7 @@
 # Trading OS Indicator Specification
 
-Version: v0.0.1-alpha
-Phase: 0 - Design and Specification
+Version: v0.1.2
+Phase: 1 - Core Trading App
 
 ## Purpose
 
@@ -255,6 +255,13 @@ Initial scoring draft:
 | Displacement | 10 |
 | FVG / Entry Zone | 5 |
 | RR / Risk | 5 |
+
+Current web profile: `score-v1`
+
+The score is calculated continuously, but the grade remains pending until the
+setup reaches READY. Every saved assessment includes the profile name and
+category breakdown so future calibration does not mix records produced by
+different formulas.
 
 Output:
 

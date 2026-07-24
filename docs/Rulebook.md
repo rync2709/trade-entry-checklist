@@ -1,7 +1,7 @@
 # Trading OS Rulebook
 
-Version: v0.0.1-alpha
-Phase: 0 - Design and Specification
+Version: v0.1.2
+Phase: 1 - Core Trading App
 
 ## Purpose
 
@@ -212,7 +212,8 @@ Common invalidation reasons:
 
 ## Rule 13 - Confidence Score
 
-Future versions should convert checklist quality into a score from 0 to 100.
+The web app converts checklist quality into a score from 0 to 100 using the
+versioned `score-v1` profile.
 
 Initial grade model:
 
@@ -224,4 +225,8 @@ Initial grade model:
 | 60-69 | C | Watchlist only |
 | Below 60 | D | Skip |
 
-The current Phase 0 focus is rule clarity. Exact weights will be finalized before Pine Script automation.
+The current weights are the first implementation baseline. A final grade is
+shown only when the setup reaches READY TO ENTER. Before that point the score
+shows setup maturity, while the grade remains pending. New trade records store
+their score profile and category breakdown so the weights can be calibrated
+against real outcomes before Pine Script automation.
