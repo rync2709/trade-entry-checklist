@@ -240,7 +240,11 @@
       `<p class="journal-note"><strong>Trade note:</strong> ${escapeHtml(record.notes)}</p>` : "";
 
     return `
-      <article class="panel journal-card" data-journal-id="${escapeHtml(record.id)}">
+      <article
+        class="panel journal-card"
+        id="trade-${escapeHtml(record.id)}"
+        data-journal-id="${escapeHtml(record.id)}"
+      >
         <header class="journal-card-header">
           <div>
             <div class="journal-title-row">
@@ -511,6 +515,20 @@
     } else {
       emptyTitle.textContent = "ยังไม่มี Trade ใน Journal";
       emptyMessage.textContent = "รายการที่เลือก `ENTERED` จาก New Trade Wizard จะปรากฏที่นี่";
+    }
+    if (window.location.hash.startsWith("#trade-")) {
+      let targetId = window.location.hash.slice(1);
+      try {
+        targetId = decodeURIComponent(targetId);
+      } catch (error) {
+        targetId = window.location.hash.slice(1);
+      }
+      const target = document.getElementById(targetId);
+      if (target) {
+        window.requestAnimationFrame(function () {
+          target.scrollIntoView({ block: "start" });
+        });
+      }
     }
     hydrateScreenshots(visible, version);
   }

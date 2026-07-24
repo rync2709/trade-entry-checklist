@@ -1,10 +1,11 @@
-const CACHE = 'trading-companion-v0.3.1';
+const CACHE = 'trading-companion-v0.4.0';
 const ASSETS = [
   './',
   './index.html',
   './trade.html',
   './journal.html',
   './stats.html',
+  './database.html',
   './checklist.html',
   './manifest.json',
   './assets/app-icon.svg',
@@ -16,6 +17,7 @@ const ASSETS = [
   './css/wizard.css',
   './css/journal.css',
   './css/stats.css',
+  './css/database.css',
   './js/app.js',
   './js/storage.js',
   './js/media.js',
@@ -23,7 +25,8 @@ const ASSETS = [
   './js/dashboard.js',
   './js/trade.js',
   './js/journal.js',
-  './js/stats.js'
+  './js/stats.js',
+  './js/database.js'
 ];
 
 self.addEventListener('install', event => {

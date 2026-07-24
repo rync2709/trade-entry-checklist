@@ -2,6 +2,24 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.4.0 - 2026-07-24
+
+### Added
+
+- Added the first searchable Trade Database for entered trades.
+- Added token search across Pair, Setup, Session, Grade, Result, Mistake, and review text.
+- Added structured filters for Pair, Setup, Session, Grade, Result, Mistake, and date range.
+- Added newest, oldest, highest-R, and lowest-R sorting.
+- Added direct links from Database results to matching Journal reviews.
+- Added responsive desktop and mobile Database layouts.
+
+### Changed
+
+- Started Phase 4 while real-use validation continues for earlier phases.
+- Added Database to primary desktop and mobile navigation.
+- Updated Journal cards to support direct highlighted review links.
+- Updated the PWA cache for the Database release.
+
 ## v0.3.1 - 2026-07-24
 
 ### Added

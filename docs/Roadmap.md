@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.3.1
+Version: v0.4.0
 Status: Master product roadmap
 
 ## Product Direction
@@ -232,6 +232,18 @@ Calendar states:
 ## Phase 4 - Trade Database
 
 Goal: make every past trade searchable and reusable as study material.
+
+Status: In progress.
+
+First milestone:
+
+- [x] Add a database for every assessment marked `ENTERED`.
+- [x] Add token search across trade context and review text.
+- [x] Add Pair, Setup, Session, Grade, Result, Mistake, and date-range filters.
+- [x] Add newest, oldest, highest-R, and lowest-R sorting.
+- [x] Add database result summaries and clear empty states.
+- [x] Link each result to the matching Journal review.
+- [ ] Validate search terms and filters against a larger real-trade sample.
 
 Search filters:
 
