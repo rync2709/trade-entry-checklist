@@ -2,16 +2,16 @@
 
 Trading Companion is the web application for the Trading OS decision framework. It is built from the original ICT/SMC Trade Entry Checklist.
 
-Trading Companion now combines the guided decision workflow, Trade Journal, performance statistics, searchable Trade Database, Weekly Review, and the first daily Session Planner. Real-use validation continues across the earlier phases while Phase 6 is developed.
+Trading Companion now combines the guided decision workflow, Trade Journal, performance statistics, searchable Trade Database, Weekly Review, daily Session Planner, and a manual context Watchlist. Real-use validation continues across the earlier phases while Phase 7 is developed.
 
 ## Current Status
 
 - Product name: Trading Companion
 - Decision framework: Trading OS
 - Repository name: Trading-Companion
-- Phase: 6 - Session Planner (in progress)
+- Phase: 7 - Watchlist (in progress)
 - Phase 1 validation: collecting 20 real-use outcomes
-- Version: v0.6.0
+- Version: v0.7.0
 - Live app: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 1 Milestone
@@ -98,6 +98,18 @@ The first Phase 6 milestone includes:
 - Current-session plan preview using Bangkok time
 - Dashboard reminder linked to the current Daily Plan
 
+## Phase 7 Milestone
+
+The first Phase 7 milestone includes:
+
+- Default Watchlist for Gold, Bitcoin, Ethereum, Solana, and Nasdaq
+- Add, edit, and remove support for up to 30 symbols
+- HTF Bias, Setup Status, Current Zone, Waiting For, and Last Review Note
+- Ready, Waiting, No Trade, and Needs Update filters
+- 24-hour context freshness warning
+- Dashboard summary that only promotes fresh READY context
+- Local manual context tracking without implying live market data
+
 ## Repository Structure
 
 ```text
@@ -109,6 +121,7 @@ The first Phase 6 milestone includes:
 |-- database.html
 |-- weekly.html
 |-- planner.html
+|-- watchlist.html
 |-- checklist.html
 |-- manifest.json
 |-- sw.js
@@ -132,4 +145,4 @@ The first Phase 6 milestone includes:
 
 ## Data Note
 
-Drafts, assessment history, Weekly Reviews, Daily Session Plans, and Screenshots are stored only in the browser on the current device. Screenshots use IndexedDB so image files do not consume the smaller checklist storage area. Trading Companion does not place orders and does not send trade data to a server.
+Drafts, assessment history, Weekly Reviews, Daily Session Plans, Watchlist Context, and Screenshots are stored only in the browser on the current device. Screenshots use IndexedDB so image files do not consume the smaller checklist storage area. Watchlist status is entered manually and is not live market data. Trading Companion does not place orders and does not send trade data to a server.

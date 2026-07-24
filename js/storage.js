@@ -5,7 +5,8 @@
     draft: "tradingCompanionDraftV1",
     history: "tradingCompanionHistoryV1",
     weeklyReviews: "tradingCompanionWeeklyReviewsV1",
-    sessionPlans: "tradingCompanionSessionPlansV1"
+    sessionPlans: "tradingCompanionSessionPlansV1",
+    watchlist: "tradingCompanionWatchlistV1"
   };
   const VALIDATION_TARGET = 20;
   const JOURNAL_EMOTIONS = ["calm", "neutral", "fearful", "angry", "overconfident"];
@@ -366,6 +367,127 @@
     );
   }
 
+  function normalizeWatchlistSymbol(value) {
+    return typeof value === "string" ?
+      value.trim().toUpperCase().replace(/[^A-Z0-9._-]/g, "").slice(0, 20) : "";
+  }
+
+  function normalizeWatchlistItem(item) {
+    const source = item && typeof item === "object" ? item : {};
+    const symbol = normalizeWatchlistSymbol(source.symbol);
+    const bias = ["bullish", "bearish", "neutral"].includes(source.bias) ?
+      source.bias : "";
+    const allowedStatuses = [
+      "monitoring",
+      "waiting-htf",
+      "waiting-poi",
+      "waiting-sweep",
+      "waiting-confirmation",
+      "ready",
+      "no-trade"
+    ];
+    const status = allowedStatuses.includes(source.status) ? source.status : "monitoring";
+    const normalizeText = function (value, maximum) {
+      return typeof value === "string" ? value.trim().slice(0, maximum) : "";
+    };
+    return {
+      id: typeof source.id === "string" && source.id ?
+        source.id.slice(0, 100) : `watch-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      symbol,
+      name: normalizeText(source.name, 80) || symbol,
+      bias,
+      status,
+      currentZone: normalizeText(source.currentZone, 500),
+      nextCondition: normalizeText(source.nextCondition, 500),
+      reviewNote: normalizeText(source.reviewNote, 1000),
+      createdAt: typeof source.createdAt === "string" ?
+        source.createdAt : new Date().toISOString(),
+      updatedAt: typeof source.updatedAt === "string" ? source.updatedAt : null
+    };
+  }
+
+  function createDefaultWatchlist() {
+    return [
+      ["watch-xauusd", "XAUUSD", "Gold"],
+      ["watch-btcusd", "BTCUSD", "Bitcoin"],
+      ["watch-ethusd", "ETHUSD", "Ethereum"],
+      ["watch-solusd", "SOLUSD", "Solana"],
+      ["watch-nas100", "NAS100", "Nasdaq"]
+    ].map(function ([id, symbol, name]) {
+      return normalizeWatchlistItem({
+        id,
+        symbol,
+        name,
+        status: "monitoring",
+        createdAt: new Date().toISOString()
+      });
+    });
+  }
+
+  function saveWatchlist(items) {
+    const next = (Array.isArray(items) ? items : [])
+      .map(normalizeWatchlistItem)
+      .filter((item) => item.symbol)
+      .slice(0, 30);
+    localStorage.setItem(KEYS.watchlist, JSON.stringify(next));
+    return next;
+  }
+
+  function loadWatchlist() {
+    const raw = localStorage.getItem(KEYS.watchlist);
+    if (raw === null) return saveWatchlist(createDefaultWatchlist());
+    const saved = parse(raw, []);
+    return Array.isArray(saved) ?
+      saved.map(normalizeWatchlistItem).filter((item) => item.symbol).slice(0, 30) : [];
+  }
+
+  function addWatchlistItem(symbol, name) {
+    const normalizedSymbol = normalizeWatchlistSymbol(symbol);
+    if (!normalizedSymbol) return null;
+    const items = loadWatchlist();
+    if (items.some((item) => item.symbol === normalizedSymbol)) return null;
+    const now = new Date().toISOString();
+    const item = normalizeWatchlistItem({
+      id: `watch-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      symbol: normalizedSymbol,
+      name: typeof name === "string" && name.trim() ? name : normalizedSymbol,
+      status: "monitoring",
+      createdAt: now,
+      updatedAt: null
+    });
+    saveWatchlist([...items, item]);
+    return item;
+  }
+
+  function saveWatchlistItem(id, updates) {
+    if (typeof id !== "string") return null;
+    let updated = null;
+    const items = loadWatchlist().map(function (item) {
+      if (item.id !== id) return item;
+      updated = normalizeWatchlistItem({
+        ...item,
+        ...(updates && typeof updates === "object" ? updates : {}),
+        id: item.id,
+        symbol: item.symbol,
+        createdAt: item.createdAt,
+        updatedAt: new Date().toISOString()
+      });
+      return updated;
+    });
+    if (!updated) return null;
+    saveWatchlist(items);
+    return updated;
+  }
+
+  function removeWatchlistItem(id) {
+    if (typeof id !== "string") return false;
+    const items = loadWatchlist();
+    const next = items.filter((item) => item.id !== id);
+    if (next.length === items.length) return false;
+    saveWatchlist(next);
+    return true;
+  }
+
   function saveJournalReview(id, review) {
     const source = review && typeof review === "object" ? review : {};
     const url = typeof source.tradingViewUrl === "string" ? source.tradingViewUrl.trim() : "";
@@ -583,6 +705,13 @@
     saveSessionPlan,
     clearSessionPlan,
     hasMeaningfulSessionPlan,
+    normalizeWatchlistSymbol,
+    normalizeWatchlistItem,
+    createDefaultWatchlist,
+    loadWatchlist,
+    addWatchlistItem,
+    saveWatchlistItem,
+    removeWatchlistItem,
     saveJournalReview,
     saveJournalScreenshot,
     calculateRealizedRr,

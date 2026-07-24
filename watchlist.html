@@ -7,11 +7,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Trading Companion">
-  <title>Trade Journal | Trading Companion</title>
+  <title>Watchlist | Trading Companion</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/journal.css">
+  <link rel="stylesheet" href="css/style.css?v=0.7.0">
+  <link rel="stylesheet" href="css/watchlist.css">
 </head>
 <body>
   <header class="topbar">
@@ -33,7 +33,7 @@
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
           New Trade
         </a>
-        <a class="nav-link" href="journal.html" aria-current="page">
+        <a class="nav-link" href="journal.html">
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
           Journal
         </a>
@@ -54,12 +54,12 @@
           Session Planner
         </a>
         <details class="topnav-more">
-          <summary class="nav-link" title="More tools">
+          <summary class="nav-link" aria-current="page" title="More tools">
             <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-more"></use></svg>
             <span class="sr-only">More tools</span>
           </summary>
           <div class="topnav-more-menu">
-            <a class="nav-link" href="watchlist.html">
+            <a class="nav-link" href="watchlist.html" aria-current="page">
               <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-eye"></use></svg>
               Watchlist
             </a>
@@ -74,71 +74,77 @@
   </header>
 
   <main class="page-shell">
-    <header class="page-heading">
-      <p class="eyebrow">Post-trade review</p>
-      <h1>Trade Journal</h1>
-      <p class="lede">ทบทวนอารมณ์ ความผิดพลาด และบทเรียนจาก Trade ที่เข้าแล้ว</p>
+    <header class="watchlist-heading">
+      <div class="page-heading">
+        <p class="eyebrow">Market context board</p>
+        <h1>Watchlist</h1>
+        <p class="lede">ติดตาม Context และเงื่อนไขที่กำลังรอในแต่ละสินทรัพย์</p>
+      </div>
+      <form class="watchlist-add-form" id="watchlistAddForm">
+        <label class="sr-only" for="watchlistSymbol">เพิ่ม Symbol</label>
+        <input id="watchlistSymbol" type="text" maxlength="20" autocomplete="off" placeholder="เช่น EURUSD" required>
+        <button class="button button-primary" type="submit">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+          เพิ่ม Pair
+        </button>
+      </form>
     </header>
 
-    <section class="journal-metrics" aria-label="Journal summary">
-      <article class="journal-metric">
-        <span>Total trades</span>
-        <strong id="totalTrades">0</strong>
+    <section class="watchlist-status-bar" id="watchlistStatusBar" data-state="waiting" aria-live="polite">
+      <span class="status-dot"></span>
+      <span id="watchlistStatusText">กำลังอ่าน Watchlist</span>
+    </section>
+
+    <section class="watchlist-metrics" aria-label="Watchlist summary">
+      <article>
+        <span>Tracked</span>
+        <strong id="watchlistTracked">0</strong>
+        <small>สินทรัพย์ทั้งหมด</small>
       </article>
-      <article class="journal-metric">
-        <span>Open</span>
-        <strong id="openTrades">0</strong>
+      <article>
+        <span>Ready</span>
+        <strong id="watchlistReady">0</strong>
+        <small>ผ่าน Context ที่กำหนด</small>
       </article>
-      <article class="journal-metric">
-        <span>Closed</span>
-        <strong id="closedTrades">0</strong>
+      <article>
+        <span>Waiting</span>
+        <strong id="watchlistWaiting">0</strong>
+        <small>กำลังรอเงื่อนไข</small>
       </article>
-      <article class="journal-metric">
-        <span>Reviewed</span>
-        <strong id="reviewedTrades">0</strong>
+      <article>
+        <span>Needs update</span>
+        <strong id="watchlistStale">0</strong>
+        <small>เกิน 24 ชั่วโมงหรือยังไม่เคยบันทึก</small>
       </article>
     </section>
 
-    <section class="section" aria-labelledby="journalHeading">
-      <div class="section-heading journal-section-heading">
+    <section class="section watchlist-workspace" aria-labelledby="watchlistBoardHeading">
+      <div class="watchlist-toolbar">
         <div>
-          <h2 id="journalHeading">Entered trades</h2>
-          <p>ข้อมูลถูกเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้</p>
+          <h2 id="watchlistBoardHeading">Setup Board</h2>
+          <p>สถานะมาจากการทบทวนของคุณ ไม่ใช่ข้อมูลราคาตลาดแบบเรียลไทม์</p>
         </div>
-        <div class="filter-tabs" role="group" aria-label="กรองสถานะ Trade">
-          <button type="button" data-journal-filter="all" aria-pressed="true">All</button>
-          <button type="button" data-journal-filter="open" aria-pressed="false">Open</button>
-          <button type="button" data-journal-filter="closed" aria-pressed="false">Closed</button>
+        <div class="watchlist-filters" role="group" aria-label="กรอง Watchlist">
+          <button type="button" data-watch-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-watch-filter="ready" aria-pressed="false">Ready</button>
+          <button type="button" data-watch-filter="waiting" aria-pressed="false">Waiting</button>
+          <button type="button" data-watch-filter="no-trade" aria-pressed="false">No Trade</button>
+          <button type="button" data-watch-filter="stale" aria-pressed="false">Needs Update</button>
         </div>
       </div>
 
-      <div class="journal-list" id="journalList"></div>
-      <div class="panel empty-state" id="journalEmpty">
-        <div>
-          <div class="icon-box">
-            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
-          </div>
-          <h3 id="journalEmptyTitle">ยังไม่มี Trade ใน Journal</h3>
-          <p id="journalEmptyMessage">รายการที่เลือก `ENTERED` จาก New Trade Wizard จะปรากฏที่นี่</p>
-          <a class="button button-primary" href="trade.html">
-            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
-            เริ่ม New Trade
-          </a>
+      <div class="watchlist-grid" id="watchlistGrid"></div>
+      <div class="panel watchlist-empty" id="watchlistEmpty" hidden>
+        <div class="icon-box">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-eye"></use></svg>
         </div>
+        <h3 id="watchlistEmptyTitle">ยังไม่มี Pair ใน Watchlist</h3>
+        <p id="watchlistEmptyMessage">เพิ่ม Symbol ด้านบนเพื่อเริ่มติดตาม Context</p>
       </div>
     </section>
+
+    <div class="watchlist-save-announcement" id="watchlistSaveAnnouncement" aria-live="polite"></div>
   </main>
-
-  <dialog class="screenshot-dialog" id="screenshotDialog" aria-labelledby="screenshotDialogTitle">
-    <div class="screenshot-dialog-header">
-      <strong id="screenshotDialogTitle">Trade Screenshot</strong>
-      <button class="button button-quiet screenshot-dialog-close" type="button" id="closeScreenshotDialog" title="ปิดรูป">
-        <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-x"></use></svg>
-        <span class="sr-only">ปิดรูป</span>
-      </button>
-    </div>
-    <img id="screenshotDialogImage" alt="Trade Screenshot ขนาดเต็ม">
-  </dialog>
 
   <nav class="mobile-nav" aria-label="เมนูมือถือ">
     <a class="nav-link" href="index.html">
@@ -149,7 +155,7 @@
       <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
       New Trade
     </a>
-    <a class="nav-link" href="journal.html" aria-current="page">
+    <a class="nav-link" href="journal.html">
       <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-book-open"></use></svg>
       Journal
     </a>
@@ -158,7 +164,7 @@
       Statistics
     </a>
     <details class="mobile-more">
-      <summary class="nav-link">
+      <summary class="nav-link" aria-current="page">
         <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-more"></use></svg>
         More
       </summary>
@@ -175,7 +181,7 @@
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-clock"></use></svg>
           Session Planner
         </a>
-        <a class="nav-link" href="watchlist.html">
+        <a class="nav-link" href="watchlist.html" aria-current="page">
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-eye"></use></svg>
           Watchlist
         </a>
@@ -187,9 +193,8 @@
     </details>
   </nav>
 
-  <script src="js/storage.js"></script>
-  <script src="js/media.js"></script>
+  <script src="js/storage.js?v=0.7.0"></script>
   <script src="js/app.js"></script>
-  <script src="js/journal.js"></script>
+  <script src="js/watchlist.js"></script>
 </body>
 </html>

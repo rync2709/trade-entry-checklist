@@ -1,0 +1,359 @@
+.watchlist-heading {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.watchlist-heading .page-heading {
+  margin-bottom: 0;
+}
+
+.watchlist-add-form {
+  width: min(360px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+}
+
+.watchlist-add-form input {
+  min-width: 0;
+  height: 42px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.watchlist-add-form input:focus {
+  border-color: var(--focus);
+}
+
+.watchlist-status-bar {
+  min-height: 42px;
+  padding: 10px 13px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.watchlist-status-bar[data-state="developing"] {
+  border-color: rgba(237, 189, 91, 0.38);
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.watchlist-status-bar[data-state="ready"] {
+  border-color: rgba(82, 212, 147, 0.38);
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.watchlist-metrics {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.watchlist-metrics article {
+  min-width: 0;
+  min-height: 116px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.watchlist-metrics span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.watchlist-metrics strong {
+  margin: 11px 0 6px;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.watchlist-metrics small {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.watchlist-workspace {
+  min-width: 0;
+}
+
+.watchlist-toolbar {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.watchlist-toolbar h2 {
+  margin-bottom: 4px;
+}
+
+.watchlist-toolbar p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.watchlist-filters {
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(62px, auto));
+}
+
+.watchlist-filters button {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.watchlist-filters button:hover {
+  color: var(--text);
+}
+
+.watchlist-filters button[aria-pressed="true"] {
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.watchlist-card {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+}
+
+.watchlist-card[data-status="ready"] {
+  border-color: rgba(82, 212, 147, 0.42);
+}
+
+.watchlist-card[data-status="no-trade"] {
+  border-color: rgba(255, 116, 116, 0.38);
+}
+
+.watchlist-card-header {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.watchlist-symbol {
+  min-width: 0;
+}
+
+.watchlist-symbol strong,
+.watchlist-symbol span,
+.watchlist-freshness {
+  display: block;
+}
+
+.watchlist-symbol strong {
+  overflow: hidden;
+  font-size: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watchlist-symbol span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.watchlist-freshness {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.watchlist-freshness[data-stale="true"] {
+  color: var(--amber);
+}
+
+.watchlist-card-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.watchlist-icon-button {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  padding: 9px;
+}
+
+.watchlist-delete:hover {
+  border-color: rgba(255, 116, 116, 0.38);
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.watchlist-context-grid,
+.watchlist-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.watchlist-detail-grid {
+  margin-top: 10px;
+}
+
+.watchlist-field {
+  min-width: 0;
+}
+
+.watchlist-field > span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.watchlist-field select,
+.watchlist-field input,
+.watchlist-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.watchlist-field select,
+.watchlist-field input {
+  height: 40px;
+  padding: 8px 10px;
+}
+
+.watchlist-field textarea {
+  min-height: 76px;
+  padding: 10px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.watchlist-field select:focus,
+.watchlist-field input:focus,
+.watchlist-field textarea:focus {
+  border-color: var(--focus);
+}
+
+.watchlist-note {
+  margin-top: 10px;
+}
+
+.watchlist-card-footer {
+  min-height: 22px;
+  margin-top: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10px;
+}
+
+.watchlist-card-footer span[data-state="saved"] {
+  color: var(--green);
+}
+
+.watchlist-empty {
+  min-height: 210px;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.watchlist-empty p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.watchlist-save-announcement {
+  min-height: 1px;
+}
+
+@media (max-width: 900px) {
+  .watchlist-heading,
+  .watchlist-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .watchlist-add-form {
+    width: 100%;
+  }
+
+  .watchlist-filters {
+    width: 100%;
+    overflow-x: auto;
+    grid-template-columns: repeat(5, minmax(90px, 1fr));
+  }
+
+  .watchlist-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .watchlist-add-form {
+    grid-template-columns: 1fr;
+  }
+
+  .watchlist-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .watchlist-context-grid,
+  .watchlist-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

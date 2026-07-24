@@ -20,7 +20,7 @@
         <img src="assets/app-icon.svg" alt="">
         <span class="brand-copy">
           <span class="brand-name">Trading Companion</span>
-          <span class="brand-phase">Trading OS · Phase 6</span>
+          <span class="brand-phase">Trading OS · Phase 7</span>
         </span>
       </a>
 
@@ -59,6 +59,10 @@
             <span class="sr-only">More tools</span>
           </summary>
           <div class="topnav-more-menu">
+            <a class="nav-link" href="watchlist.html">
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-eye"></use></svg>
+              Watchlist
+            </a>
             <a class="nav-link" href="checklist.html">
               <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
               Classic Checklist
@@ -207,6 +211,24 @@
             <span>เปิด Weekly Review</span>
           </a>
         </article>
+
+        <article class="panel review-prompt">
+          <div class="review-prompt-icon">
+            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-eye"></use></svg>
+          </div>
+          <div class="review-prompt-copy">
+            <span class="status-pill" id="watchlistPromptState" data-state="waiting">
+              <span class="status-dot"></span>
+              <span class="pill-copy">NEEDS UPDATE</span>
+            </span>
+            <h2 id="watchlistPromptHeading">Watchlist</h2>
+            <p id="watchlistPromptMessage">อัปเดต HTF Bias, Current Zone และเงื่อนไขที่กำลังรอ</p>
+          </div>
+          <a class="button" id="watchlistPromptAction" href="watchlist.html">
+            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-right"></use></svg>
+            <span>เปิด Watchlist</span>
+          </a>
+        </article>
       </div>
     </section>
 
@@ -343,6 +365,10 @@
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-clock"></use></svg>
           Session Planner
         </a>
+        <a class="nav-link" href="watchlist.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-eye"></use></svg>
+          Watchlist
+        </a>
         <a class="nav-link" href="checklist.html">
           <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
           Classic Checklist
@@ -351,10 +377,11 @@
     </details>
   </nav>
 
-  <script src="js/storage.js"></script>
+  <script src="js/storage.js?v=0.7.0"></script>
   <script src="js/logic.js"></script>
   <script src="js/app.js"></script>
   <script src="js/planner.js"></script>
+  <script src="js/watchlist.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>

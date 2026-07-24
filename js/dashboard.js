@@ -266,6 +266,8 @@
     const session = currentSession();
     const sessionPlan = storage.loadSessionPlan(today);
     const sessionPlanEvaluation = window.TradingPlanner.evaluatePlan(sessionPlan);
+    const watchlist = storage.loadWatchlist();
+    const watchlistSummary = window.TradingWatchlist.summarize(watchlist);
     const weekStart = currentWeekStart();
     const weekEndDate = new Date(`${weekStart}T12:00:00Z`);
     weekEndDate.setUTCDate(weekEndDate.getUTCDate() + 6);
@@ -304,6 +306,36 @@
       plannerPromptMessage.textContent =
         "ยังไม่มี Daily Plan กำหนด Bias, POI และ No Trade Conditions ก่อนตลาดเปิด";
       plannerPromptAction.querySelector("span").textContent = "เริ่ม Session Plan";
+    }
+
+    const watchlistPromptState = document.getElementById("watchlistPromptState");
+    const watchlistPromptMessage = document.getElementById("watchlistPromptMessage");
+    const watchlistPromptAction = document.getElementById("watchlistPromptAction");
+    if (watchlistSummary.freshReady) {
+      watchlistPromptState.dataset.state = "ready";
+      watchlistPromptState.querySelector(".pill-copy").textContent =
+        `${watchlistSummary.freshReady} READY`;
+      watchlistPromptMessage.textContent =
+        `${watchlistSummary.freshReadySymbols.slice(0, 3).join(", ")} พร้อมตรวจ Setup จาก Context ที่อัปเดตแล้ว`;
+      watchlistPromptAction.querySelector("span").textContent = "ดู Pair ที่พร้อม";
+    } else if (!watchlistSummary.total) {
+      watchlistPromptState.dataset.state = "waiting";
+      watchlistPromptState.querySelector(".pill-copy").textContent = "WATCHLIST EMPTY";
+      watchlistPromptMessage.textContent =
+        "เพิ่ม Pair ที่ต้องการติดตาม แล้วกำหนด HTF Bias และเงื่อนไขที่กำลังรอ";
+      watchlistPromptAction.querySelector("span").textContent = "เพิ่ม Watchlist";
+    } else if (watchlistSummary.stale) {
+      watchlistPromptState.dataset.state = "developing";
+      watchlistPromptState.querySelector(".pill-copy").textContent = "NEEDS UPDATE";
+      watchlistPromptMessage.textContent =
+        `${watchlistSummary.stale} จาก ${watchlistSummary.total} Pair ต้องอัปเดต Context ก่อนใช้ตัดสินใจ`;
+      watchlistPromptAction.querySelector("span").textContent = "อัปเดต Watchlist";
+    } else {
+      watchlistPromptState.dataset.state = "waiting";
+      watchlistPromptState.querySelector(".pill-copy").textContent = "WAITING";
+      watchlistPromptMessage.textContent =
+        `${watchlistSummary.waiting} Pair กำลังรอเงื่อนไขตาม Context ที่บันทึกไว้`;
+      watchlistPromptAction.querySelector("span").textContent = "เปิด Watchlist";
     }
 
     const weeklyPromptState = document.getElementById("weeklyPromptState");

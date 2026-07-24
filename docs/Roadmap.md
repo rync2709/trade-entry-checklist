@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.6.0
+Version: v0.7.0
 Status: Master product roadmap
 
 ## Product Direction
@@ -351,6 +351,19 @@ New York Plan: Only trade after liquidity sweep and CISD
 ## Phase 7 - Watchlist
 
 Goal: track multiple instruments and setup states.
+
+Status: In progress.
+
+First milestone:
+
+- [x] Start with Gold, Bitcoin, Ethereum, Solana, and Nasdaq.
+- [x] Add, edit, and remove Watchlist symbols.
+- [x] Track HTF Bias, Setup Status, Current Zone, Waiting For, and Last Review Note.
+- [x] Filter Ready, Waiting, No Trade, and Needs Update states.
+- [x] Warn when Context is missing or older than 24 hours.
+- [x] Add fresh Watchlist status to the Dashboard.
+- [x] Keep Watchlist data manual until a supported market-data integration is designed.
+- [ ] Validate the Watchlist through repeated session preparation.
 
 Planned assets:
 

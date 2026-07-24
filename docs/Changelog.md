@@ -2,6 +2,24 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.7.0 - 2026-07-24
+
+### Added
+
+- Added a manual context Watchlist for up to 30 symbols.
+- Added Gold, Bitcoin, Ethereum, Solana, and Nasdaq as the initial Watchlist.
+- Added HTF Bias, Setup Status, Current Zone, Waiting For, and Last Review Note.
+- Added Ready, Waiting, No Trade, and Needs Update filters.
+- Added a 24-hour context freshness warning.
+- Added a Dashboard Watchlist summary that only promotes fresh READY context.
+- Added Watchlist to desktop and mobile navigation.
+
+### Changed
+
+- Started Phase 7 while real-use validation continues for earlier phases.
+- Updated the PWA cache for the Watchlist release.
+- Clarified that Watchlist status is manual context, not live market data.
+
 ## v0.6.0 - 2026-07-24
 
 ### Added
