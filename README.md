@@ -10,7 +10,7 @@ Phase 1 turns the original static checklist into a guided decision workspace wit
 - Decision framework: Trading OS
 - Repository name: Trading-Companion
 - Phase: 1 - Core Trading App (in progress)
-- Version: v0.1.2
+- Version: v0.1.3
 - Live checklist: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 1 Milestone
@@ -28,6 +28,7 @@ The first Phase 1 milestone includes:
 - Entry, Stop Loss, Take Profit, and automatic Planned RR
 - Open Position tracking with WIN, LOSS, and BREAK EVEN outcomes
 - Initial lifecycle records for the future Trade Journal
+- Phase 1 validation progress with closed outcomes and reviewed skips
 - Classic Checklist preserved at `checklist.html`
 
 ## Repository Structure

@@ -142,6 +142,42 @@
       </div>
     </section>
 
+    <section class="section" aria-labelledby="validationHeading">
+      <div class="section-heading">
+        <div>
+          <h2 id="validationHeading">Phase 1 validation</h2>
+          <p>หลักฐานจาก Trade ที่ปิดผลแล้วและ Setup ที่ทบทวนหลัง SKIP</p>
+        </div>
+      </div>
+      <div class="panel validation-panel">
+        <div class="validation-summary">
+          <span class="status-pill" id="validationState" data-state="waiting">
+            <span class="status-dot"></span>
+            <span class="pill-copy">COLLECTING EVIDENCE</span>
+          </span>
+          <strong class="validation-count" id="validationCount">0 / 20</strong>
+          <span class="validation-message" id="validationMessage">ต้องการอีก 20 ผลลัพธ์เพื่อครบเป้าหมาย</span>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-value" id="validationProgress"></div>
+          </div>
+        </div>
+        <div class="validation-metrics">
+          <div class="validation-metric">
+            <span>Closed outcomes</span>
+            <strong id="closedEvidenceCount">0</strong>
+          </div>
+          <div class="validation-metric">
+            <span>Reviewed skips</span>
+            <strong id="reviewedSkipCount">0</strong>
+          </div>
+          <div class="validation-metric">
+            <span>Pending skip reviews</span>
+            <strong id="pendingSkipCount">0</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="pipelineHeading">
       <div class="section-heading">
         <div>
@@ -182,7 +218,7 @@
       <div class="section-heading">
         <div>
           <h2 id="historyHeading">Recent assessments</h2>
-          <p>รายการประเมินล่าสุดในอุปกรณ์นี้</p>
+          <p>รายการล่าสุดและ SKIP ที่ยังรอทบทวนในอุปกรณ์นี้</p>
         </div>
       </div>
       <div class="panel">

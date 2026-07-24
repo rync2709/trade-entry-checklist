@@ -5,6 +5,7 @@
     draft: "tradingCompanionDraftV1",
     history: "tradingCompanionHistoryV1"
   };
+  const VALIDATION_TARGET = 20;
 
   function parse(value, fallback) {
     if (!value) return fallback;
@@ -90,6 +91,16 @@
     return Array.isArray(saved) ? saved : [];
   }
 
+  function isValidationEligible(item) {
+    return Boolean(
+      item &&
+      item.result &&
+      item.result.scoreProfile === "score-v1" &&
+      Array.isArray(item.result.scoreBreakdown) &&
+      item.result.scoreBreakdown.length
+    );
+  }
+
   function saveAssessment(draft, evaluation, options) {
     const history = loadHistory();
     const decision = options && options.decision ? options.decision : "reviewed";
@@ -120,6 +131,10 @@
         openedAt: decision === "entered" ? now : null,
         closedAt: null,
         outcome: null
+      },
+      validation: {
+        verdict: null,
+        reviewedAt: null
       },
       result: {
         state: evaluation.state,
@@ -166,16 +181,75 @@
     return updated;
   }
 
+  function reviewSkippedAssessment(id, verdict) {
+    const allowed = ["good-skip", "missed-move"];
+    if (!allowed.includes(verdict)) return null;
+
+    let updated = null;
+    const next = loadHistory().map(function (item) {
+      if (
+        item.id !== id ||
+        !item.lifecycle ||
+        item.lifecycle.status !== "skipped" ||
+        !isValidationEligible(item)
+      ) {
+        return item;
+      }
+      updated = {
+        ...item,
+        validation: {
+          ...(item.validation || {}),
+          verdict,
+          reviewedAt: new Date().toISOString()
+        }
+      };
+      return updated;
+    });
+    localStorage.setItem(KEYS.history, JSON.stringify(next));
+    return updated;
+  }
+
+  function getValidationSummary(history) {
+    const records = Array.isArray(history) ? history : loadHistory();
+    const eligible = records.filter(isValidationEligible);
+    const closed = eligible.filter((item) =>
+      item.lifecycle && item.lifecycle.status === "closed"
+    ).length;
+    const reviewedSkips = eligible.filter((item) =>
+      item.lifecycle && item.lifecycle.status === "skipped" &&
+      item.validation && ["good-skip", "missed-move"].includes(item.validation.verdict)
+    ).length;
+    const pendingSkips = eligible.filter((item) =>
+      item.lifecycle && item.lifecycle.status === "skipped" &&
+      (!item.validation || !["good-skip", "missed-move"].includes(item.validation.verdict))
+    ).length;
+    const validated = closed + reviewedSkips;
+
+    return {
+      target: VALIDATION_TARGET,
+      validated,
+      closed,
+      reviewedSkips,
+      pendingSkips,
+      remaining: Math.max(VALIDATION_TARGET - validated, 0),
+      percent: Math.min(Math.round((validated / VALIDATION_TARGET) * 100), 100)
+    };
+  }
+
   window.TradingStorage = {
     KEYS,
+    VALIDATION_TARGET,
     createDraft,
     loadDraft,
     saveDraft,
     clearDraft,
     hasMeaningfulDraft,
     loadHistory,
+    isValidationEligible,
     saveAssessment,
     loadOpenPositions,
-    closePosition
+    closePosition,
+    reviewSkippedAssessment,
+    getValidationSummary
   };
 })();

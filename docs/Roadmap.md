@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.1.2
+Version: v0.1.3
 Status: Master product roadmap
 
 ## Product Direction
@@ -63,6 +63,7 @@ First milestone:
 - [x] Add open-position tracking and close outcomes.
 - [x] Add the initial lifecycle record for the Phase 2 journal handoff.
 - [x] Add an explainable category breakdown and score profile to saved records.
+- [x] Add Phase 1 validation progress and post-SKIP verdicts.
 - [ ] Calibrate scoring weights against real trade examples.
 - [ ] Validate the workflow through repeated real-use sessions.
 

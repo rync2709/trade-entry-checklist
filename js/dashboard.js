@@ -46,7 +46,15 @@
   function recordStatus(item) {
     const lifecycle = item.lifecycle;
     if (lifecycle && lifecycle.status === "open") return { label: "OPEN", state: "open" };
-    if (lifecycle && lifecycle.status === "skipped") return { label: "SKIPPED", state: "waiting" };
+    if (lifecycle && lifecycle.status === "skipped") {
+      if (item.validation && item.validation.verdict === "good-skip") {
+        return { label: "GOOD SKIP", state: "ready" };
+      }
+      if (item.validation && item.validation.verdict === "missed-move") {
+        return { label: "MISSED MOVE", state: "developing" };
+      }
+      return { label: "SKIPPED", state: "waiting" };
+    }
     if (lifecycle && lifecycle.status === "closed") {
       if (lifecycle.outcome === "win") return { label: "WIN", state: "ready" };
       if (lifecycle.outcome === "loss") return { label: "LOSS", state: "no-trade" };
@@ -149,7 +157,17 @@
     }
 
     empty.hidden = true;
-    history.slice(0, 5).forEach(function (item) {
+    const pendingSkips = history.filter((item) =>
+      storage.isValidationEligible(item) &&
+      item.lifecycle &&
+      item.lifecycle.status === "skipped" &&
+      (!item.validation || !["good-skip", "missed-move"].includes(item.validation.verdict))
+    );
+    const visibleHistory = [...pendingSkips, ...history.slice(0, 5)].filter(
+      (item, index, records) => records.findIndex((record) => record.id === item.id) === index
+    );
+
+    visibleHistory.forEach(function (item) {
       const row = document.createElement("div");
       row.className = "history-item";
 
@@ -175,6 +193,37 @@
 
       info.append(primary, meta);
 
+      if (
+        storage.isValidationEligible(item) &&
+        item.lifecycle &&
+        item.lifecycle.status === "skipped"
+      ) {
+        const review = document.createElement("div");
+        review.className = "skip-review";
+        const reviewLabel = document.createElement("span");
+        reviewLabel.textContent = "ผลหลัง Setup จบ";
+        const reviewControl = document.createElement("div");
+        reviewControl.className = "skip-review-control";
+        [
+          ["good-skip", "GOOD SKIP"],
+          ["missed-move", "MISSED MOVE"]
+        ].forEach(function ([verdict, label]) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "skip-review-button";
+          button.dataset.reviewSkip = item.id;
+          button.dataset.verdict = verdict;
+          button.setAttribute(
+            "aria-pressed",
+            String(Boolean(item.validation && item.validation.verdict === verdict))
+          );
+          button.textContent = label;
+          reviewControl.appendChild(button);
+        });
+        review.append(reviewLabel, reviewControl);
+        info.appendChild(review);
+      }
+
       const grade = document.createElement("div");
       grade.className = "history-grade";
       const gradeValue = document.createElement("strong");
@@ -195,6 +244,7 @@
     const evaluation = draft ? logic.evaluate(draft) : null;
     const history = storage.loadHistory();
     const openPositions = storage.loadOpenPositions();
+    const validation = storage.getValidationSummary(history);
     const today = localDateKey(new Date());
     const todayHistory = history.filter((item) => localDateKey(item.savedAt) === today);
     const enteredToday = todayHistory.filter((item) =>
@@ -207,6 +257,26 @@
     document.getElementById("openCount").textContent = String(openPositions.length);
     document.getElementById("sessionName").textContent = session[0];
     document.getElementById("sessionNote").textContent = session[1];
+
+    const validationState = validation.validated >= validation.target ? "ready" :
+      validation.validated >= 10 ? "developing" : "waiting";
+    const validationLabel = validation.validated >= validation.target ? "CALIBRATION READY" :
+      validation.validated >= 10 ? "FIRST REVIEW READY" : "COLLECTING EVIDENCE";
+    const validationMessage = validation.validated >= validation.target ?
+      "มีข้อมูลครบสำหรับทบทวนสูตรคะแนนรอบหลัก" :
+      validation.validated >= 10 ?
+        "มีข้อมูลพอสำหรับทบทวนสูตรคะแนนรอบแรก" :
+        `ต้องการอีก ${validation.remaining} ผลลัพธ์เพื่อครบเป้าหมาย`;
+    const validationPill = document.getElementById("validationState");
+    validationPill.dataset.state = validationState;
+    validationPill.querySelector(".pill-copy").textContent = validationLabel;
+    document.getElementById("validationCount").textContent =
+      `${validation.validated} / ${validation.target}`;
+    document.getElementById("validationMessage").textContent = validationMessage;
+    document.getElementById("validationProgress").style.width = `${validation.percent}%`;
+    document.getElementById("closedEvidenceCount").textContent = String(validation.closed);
+    document.getElementById("reviewedSkipCount").textContent = String(validation.reviewedSkips);
+    document.getElementById("pendingSkipCount").textContent = String(validation.pendingSkips);
 
     const statePill = document.getElementById("activeStatePill");
     const stateTitle = document.getElementById("activeState");
@@ -257,15 +327,25 @@
   }
 
   document.addEventListener("click", function (event) {
-    const button = event.target.closest("[data-close-position]");
-    if (!button) return;
-    const outcomeLabel = {
-      win: "WIN",
-      loss: "LOSS",
-      "break-even": "BREAK EVEN"
-    }[button.dataset.outcome];
-    if (!window.confirm(`ปิด Position นี้เป็น ${outcomeLabel} หรือไม่?`)) return;
-    storage.closePosition(button.dataset.closePosition, button.dataset.outcome);
+    const closeButton = event.target.closest("[data-close-position]");
+    if (closeButton) {
+      const outcomeLabel = {
+        win: "WIN",
+        loss: "LOSS",
+        "break-even": "BREAK EVEN"
+      }[closeButton.dataset.outcome];
+      if (!window.confirm(`ปิด Position นี้เป็น ${outcomeLabel} หรือไม่?`)) return;
+      storage.closePosition(closeButton.dataset.closePosition, closeButton.dataset.outcome);
+      render();
+      return;
+    }
+
+    const reviewButton = event.target.closest("[data-review-skip]");
+    if (!reviewButton) return;
+    storage.reviewSkippedAssessment(
+      reviewButton.dataset.reviewSkip,
+      reviewButton.dataset.verdict
+    );
     render();
   });
 
