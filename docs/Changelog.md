@@ -2,6 +2,20 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.2.1 - 2026-07-24
+
+### Added
+
+- Added one local Screenshot attachment per entered Trade.
+- Added Screenshot preview, full-size view, replacement, and removal controls.
+- Added a dedicated IndexedDB media store with PNG, JPG, and WEBP validation.
+- Added an 8 MB input limit and clear upload error states.
+
+### Changed
+
+- Extended Journal metadata without storing image data in localStorage.
+- Updated the PWA cache to include the Screenshot storage module.
+
 ## v0.2.0 - 2026-07-24
 
 ### Added

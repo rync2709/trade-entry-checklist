@@ -11,7 +11,7 @@ Trading Companion now combines the Phase 1 guided decision workflow with the fir
 - Repository name: Trading-Companion
 - Phase: 2 - Trade Journal (in progress)
 - Phase 1 validation: collecting 20 real-use outcomes
-- Version: v0.2.0
+- Version: v0.2.1
 - Live app: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 1 Milestone
@@ -39,10 +39,11 @@ The first Phase 2 milestone includes:
 - Trade Journal for every assessment marked `ENTERED`
 - All, Open, and Closed trade filters
 - Emotion, mistake, lesson, and TradingView link fields
+- Local Screenshot attachment with preview, full-size view, replacement, and removal
 - Backward-compatible journal data for existing lifecycle records
 - Local review progress summary
 
-Screenshot attachments and richer post-trade analysis remain planned.
+Richer post-trade analysis remains planned.
 
 ## Repository Structure
 
@@ -74,4 +75,4 @@ Screenshot attachments and richer post-trade analysis remain planned.
 
 ## Data Note
 
-Drafts and assessment history are stored only in the browser on the current device. Trading Companion does not place orders and does not send trade data to a server.
+Drafts, assessment history, and Screenshots are stored only in the browser on the current device. Screenshots use IndexedDB so image files do not consume the smaller checklist storage area. Trading Companion does not place orders and does not send trade data to a server.

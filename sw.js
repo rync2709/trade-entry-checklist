@@ -1,4 +1,4 @@
-const CACHE = 'trading-companion-v0.2.0';
+const CACHE = 'trading-companion-v0.2.1';
 const ASSETS = [
   './',
   './index.html',
@@ -16,6 +16,7 @@ const ASSETS = [
   './css/journal.css',
   './js/app.js',
   './js/storage.js',
+  './js/media.js',
   './js/logic.js',
   './js/dashboard.js',
   './js/trade.js',

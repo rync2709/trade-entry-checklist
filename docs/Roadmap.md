@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.2.0
+Version: v0.2.1
 Status: Master product roadmap
 
 ## Product Direction
@@ -137,7 +137,7 @@ First milestone:
 - [x] Add Emotion, Mistakes, Lesson, and TradingView link fields.
 - [x] Preserve compatibility with existing Phase 1 lifecycle records.
 - [x] Keep journal data local to the current browser.
-- [ ] Add screenshot attachments.
+- [x] Add local Screenshot upload, preview, full-size view, replacement, and removal.
 - [ ] Add richer post-trade review fields based on real use.
 
 Journal fields:

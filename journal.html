@@ -101,6 +101,17 @@
     </section>
   </main>
 
+  <dialog class="screenshot-dialog" id="screenshotDialog" aria-labelledby="screenshotDialogTitle">
+    <div class="screenshot-dialog-header">
+      <strong id="screenshotDialogTitle">Trade Screenshot</strong>
+      <button class="button button-quiet screenshot-dialog-close" type="button" id="closeScreenshotDialog" title="ปิดรูป">
+        <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-x"></use></svg>
+        <span class="sr-only">ปิดรูป</span>
+      </button>
+    </div>
+    <img id="screenshotDialogImage" alt="Trade Screenshot ขนาดเต็ม">
+  </dialog>
+
   <nav class="mobile-nav" aria-label="เมนูมือถือ">
     <a class="nav-link" href="index.html">
       <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-home"></use></svg>
@@ -121,6 +132,7 @@
   </nav>
 
   <script src="js/storage.js"></script>
+  <script src="js/media.js"></script>
   <script src="js/app.js"></script>
   <script src="js/journal.js"></script>
 </body>

@@ -2,12 +2,19 @@
   "use strict";
 
   const storage = window.TradingStorage;
+  const media = window.TradingMedia;
   const list = document.getElementById("journalList");
   const empty = document.getElementById("journalEmpty");
   const emptyTitle = document.getElementById("journalEmptyTitle");
   const emptyMessage = document.getElementById("journalEmptyMessage");
+  const screenshotDialog = document.getElementById("screenshotDialog");
+  const screenshotDialogImage = document.getElementById("screenshotDialogImage");
+  const screenshotDialogTitle = document.getElementById("screenshotDialogTitle");
+  const closeScreenshotDialog = document.getElementById("closeScreenshotDialog");
   const filters = [...document.querySelectorAll("[data-journal-filter]")];
+  const screenshotUrls = new Map();
   let activeFilter = "all";
+  let renderVersion = 0;
 
   const emotionLabels = {
     calm: "Calm",
@@ -90,6 +97,13 @@
     return Number.isFinite(rr) && rr > 0 ? `1:${rr.toFixed(2)}` : "--";
   }
 
+  function formatFileSize(value) {
+    const bytes = Number(value);
+    if (!Number.isFinite(bytes) || bytes <= 0) return "--";
+    if (bytes < 1024 * 1024) return `${Math.max(Math.round(bytes / 1024), 1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
   function hasReview(journal) {
     return Boolean(journal.updatedAt);
   }
@@ -159,6 +173,49 @@
 
         <div class="journal-review">
           <div class="journal-form-grid">
+            <div class="journal-field journal-field-wide">
+              <span>Screenshot</span>
+              <div class="screenshot-control">
+                <button
+                  class="screenshot-preview"
+                  type="button"
+                  data-open-screenshot
+                  title="เปิดดู Screenshot ขนาดเต็ม"
+                  hidden
+                >
+                  <img alt="Trade Screenshot">
+                </button>
+                <div class="screenshot-toolbar">
+                  <div class="screenshot-actions">
+                    <label class="button screenshot-upload">
+                      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-image"></use></svg>
+                      <span data-screenshot-label>${journal.screenshot ? "เปลี่ยนรูป" : "เลือกรูป"}</span>
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        aria-label="เลือก Trade Screenshot"
+                        data-screenshot-input
+                      >
+                    </label>
+                    <button
+                      class="button button-quiet button-danger"
+                      type="button"
+                      data-remove-screenshot
+                      title="ลบ Screenshot"
+                      hidden
+                    >
+                      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-x"></use></svg>
+                      <span>ลบรูป</span>
+                    </button>
+                  </div>
+                  <span class="screenshot-status" data-screenshot-status data-state="idle">
+                    ${journal.screenshot ?
+                      `${escapeHtml(journal.screenshot.name)} · ${formatFileSize(journal.screenshot.size)}` :
+                      "PNG, JPG หรือ WEBP · ไม่เกิน 8 MB"}
+                  </span>
+                </div>
+              </div>
+            </div>
             <div class="journal-field">
               <label>Emotion</label>
               <select data-journal-emotion aria-label="Emotion">
@@ -223,7 +280,96 @@
     }).length;
   }
 
+  function findCard(tradeId) {
+    return [...list.querySelectorAll("[data-journal-id]")].find(function (card) {
+      return card.dataset.journalId === tradeId;
+    }) || null;
+  }
+
+  function revokeScreenshotUrl(tradeId) {
+    const url = screenshotUrls.get(tradeId);
+    if (url) URL.revokeObjectURL(url);
+    screenshotUrls.delete(tradeId);
+  }
+
+  function revokeScreenshotUrls() {
+    screenshotUrls.forEach(function (url) {
+      URL.revokeObjectURL(url);
+    });
+    screenshotUrls.clear();
+  }
+
+  function setScreenshotStatus(card, message, state) {
+    const status = card.querySelector("[data-screenshot-status]");
+    status.textContent = message;
+    status.dataset.state = state || "idle";
+  }
+
+  function showScreenshot(card, tradeId, entry) {
+    revokeScreenshotUrl(tradeId);
+    const url = URL.createObjectURL(entry.blob);
+    screenshotUrls.set(tradeId, url);
+
+    const preview = card.querySelector("[data-open-screenshot]");
+    const image = preview.querySelector("img");
+    image.src = url;
+    image.alt = `${card.querySelector("h3").textContent} Trade Screenshot`;
+    preview.hidden = false;
+    card.querySelector("[data-remove-screenshot]").hidden = false;
+    card.querySelector("[data-screenshot-label]").textContent = "เปลี่ยนรูป";
+    setScreenshotStatus(
+      card,
+      `${entry.name || "screenshot"} · ${formatFileSize(entry.size)}`,
+      "saved"
+    );
+  }
+
+  function hideScreenshot(card, tradeId) {
+    revokeScreenshotUrl(tradeId);
+    const preview = card.querySelector("[data-open-screenshot]");
+    preview.hidden = true;
+    preview.querySelector("img").removeAttribute("src");
+    card.querySelector("[data-remove-screenshot]").hidden = true;
+    card.querySelector("[data-screenshot-label]").textContent = "เลือกรูป";
+  }
+
+  async function hydrateScreenshots(records, version) {
+    const recordsWithScreenshots = records.filter(function (record) {
+      return Boolean(storage.normalizeJournal(record.journal).screenshot);
+    });
+
+    await Promise.all(recordsWithScreenshots.map(async function (record) {
+      const card = findCard(record.id);
+      if (!card) return;
+
+      try {
+        const entry = await media.loadScreenshot(record.id);
+        if (version !== renderVersion) return;
+        const currentCard = findCard(record.id);
+        if (!currentCard) return;
+
+        if (entry) {
+          showScreenshot(currentCard, record.id, entry);
+        } else {
+          setScreenshotStatus(currentCard, "ไม่พบไฟล์รูปในอุปกรณ์นี้", "error");
+        }
+      } catch (error) {
+        if (version === renderVersion) {
+          const currentCard = findCard(record.id);
+          if (currentCard) {
+            setScreenshotStatus(
+              currentCard,
+              error && error.message ? error.message : "โหลด Screenshot ไม่สำเร็จ",
+              "error"
+            );
+          }
+        }
+      }
+    }));
+  }
+
   function render() {
+    const version = ++renderVersion;
     const records = storage.loadJournalTrades();
     const visible = records.filter(function (record) {
       return activeFilter === "all" ||
@@ -231,6 +377,8 @@
     });
 
     renderMetrics(records);
+    revokeScreenshotUrls();
+    if (screenshotDialog.open) screenshotDialog.close();
     list.innerHTML = visible.map(renderCard).join("");
     empty.hidden = visible.length > 0;
     if (!visible.length && records.length && activeFilter !== "all") {
@@ -241,6 +389,7 @@
       emptyTitle.textContent = "ยังไม่มี Trade ใน Journal";
       emptyMessage.textContent = "รายการที่เลือก `ENTERED` จาก New Trade Wizard จะปรากฏที่นี่";
     }
+    hydrateScreenshots(visible, version);
   }
 
   filters.forEach(function (button) {
@@ -258,6 +407,47 @@
     if (mistakeButton) {
       const pressed = mistakeButton.getAttribute("aria-pressed") === "true";
       mistakeButton.setAttribute("aria-pressed", String(!pressed));
+      return;
+    }
+
+    const screenshotButton = event.target.closest("[data-open-screenshot]");
+    if (screenshotButton) {
+      const card = screenshotButton.closest("[data-journal-id]");
+      const image = screenshotButton.querySelector("img");
+      if (!image.src) return;
+      screenshotDialogImage.src = image.src;
+      screenshotDialogTitle.textContent = `${card.querySelector("h3").textContent} Screenshot`;
+      if (!screenshotDialog.open) screenshotDialog.showModal();
+      return;
+    }
+
+    const removeScreenshotButton = event.target.closest("[data-remove-screenshot]");
+    if (removeScreenshotButton) {
+      const card = removeScreenshotButton.closest("[data-journal-id]");
+      if (!window.confirm("ลบ Screenshot ของ Trade นี้ใช่หรือไม่?")) return;
+
+      removeScreenshotButton.disabled = true;
+      setScreenshotStatus(card, "กำลังลบรูป...", "idle");
+      media.deleteScreenshot(card.dataset.journalId)
+        .then(function () {
+          storage.saveJournalScreenshot(card.dataset.journalId, null);
+          hideScreenshot(card, card.dataset.journalId);
+          setScreenshotStatus(card, "ลบรูปแล้ว", "saved");
+          const saveState = card.querySelector("[data-journal-save-state]");
+          saveState.dataset.state = "saved";
+          saveState.textContent = "บันทึกการลบรูปแล้ว";
+          renderMetrics(storage.loadJournalTrades());
+        })
+        .catch(function (error) {
+          setScreenshotStatus(
+            card,
+            error && error.message ? error.message : "ลบ Screenshot ไม่สำเร็จ",
+            "error"
+          );
+        })
+        .finally(function () {
+          removeScreenshotButton.disabled = false;
+        });
       return;
     }
 
@@ -295,6 +485,58 @@
     saveState.textContent = "บันทึกแล้ว";
     renderMetrics(storage.loadJournalTrades());
   });
+
+  list.addEventListener("change", async function (event) {
+    const input = event.target.closest("[data-screenshot-input]");
+    if (!input || !input.files || !input.files[0]) return;
+
+    const card = input.closest("[data-journal-id]");
+    const file = input.files[0];
+    const uploadLabel = input.closest(".screenshot-upload");
+    input.disabled = true;
+    uploadLabel.setAttribute("aria-busy", "true");
+    setScreenshotStatus(card, "กำลังบันทึกรูป...", "idle");
+
+    try {
+      const metadata = await media.saveScreenshot(card.dataset.journalId, file);
+      const updated = storage.saveJournalScreenshot(card.dataset.journalId, metadata);
+      if (!updated) {
+        await media.deleteScreenshot(card.dataset.journalId);
+        throw new Error("ไม่พบ Trade ที่ต้องการบันทึกรูป");
+      }
+      const entry = await media.loadScreenshot(card.dataset.journalId);
+      if (entry) showScreenshot(card, card.dataset.journalId, entry);
+
+      const saveState = card.querySelector("[data-journal-save-state]");
+      saveState.dataset.state = "saved";
+      saveState.textContent = "บันทึกรูปแล้ว";
+      renderMetrics(storage.loadJournalTrades());
+    } catch (error) {
+      setScreenshotStatus(
+        card,
+        error && error.message ? error.message : "บันทึก Screenshot ไม่สำเร็จ",
+        "error"
+      );
+    } finally {
+      input.value = "";
+      input.disabled = false;
+      uploadLabel.removeAttribute("aria-busy");
+    }
+  });
+
+  closeScreenshotDialog.addEventListener("click", function () {
+    screenshotDialog.close();
+  });
+
+  screenshotDialog.addEventListener("click", function (event) {
+    if (event.target === screenshotDialog) screenshotDialog.close();
+  });
+
+  screenshotDialog.addEventListener("close", function () {
+    screenshotDialogImage.removeAttribute("src");
+  });
+
+  window.addEventListener("beforeunload", revokeScreenshotUrls);
 
   render();
 })();

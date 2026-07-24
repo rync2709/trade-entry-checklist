@@ -109,6 +109,25 @@
     );
   }
 
+  function normalizeScreenshotMetadata(screenshot) {
+    if (!screenshot || typeof screenshot !== "object") return null;
+    const type = typeof screenshot.type === "string" ? screenshot.type : "";
+    const size = Number(screenshot.size);
+    if (
+      !["image/jpeg", "image/png", "image/webp"].includes(type) ||
+      !Number.isFinite(size) ||
+      size <= 0
+    ) return null;
+    return {
+      name: typeof screenshot.name === "string" ?
+        screenshot.name.trim().slice(0, 180) : "screenshot",
+      type,
+      size,
+      updatedAt: typeof screenshot.updatedAt === "string" ?
+        screenshot.updatedAt : null
+    };
+  }
+
   function normalizeJournal(journal) {
     const source = journal && typeof journal === "object" ? journal : {};
     const emotion = JOURNAL_EMOTIONS.includes(source.emotion) ? source.emotion : "";
@@ -125,6 +144,7 @@
       mistakes,
       lesson,
       tradingViewUrl,
+      screenshot: normalizeScreenshotMetadata(source.screenshot),
       updatedAt: typeof source.updatedAt === "string" ? source.updatedAt : null
     };
   }
@@ -207,16 +227,36 @@
     const url = typeof source.tradingViewUrl === "string" ? source.tradingViewUrl.trim() : "";
     if (url && !/^https?:\/\//i.test(url)) return null;
 
-    const journal = normalizeJournal({
-      ...source,
-      updatedAt: new Date().toISOString()
-    });
     let updated = null;
     const next = loadHistory().map(function (item) {
       if (item.id !== id || !isEnteredRecord(item)) return item;
       updated = {
         ...item,
-        journal
+        journal: normalizeJournal({
+          ...normalizeJournal(item.journal),
+          ...source,
+          updatedAt: new Date().toISOString()
+        })
+      };
+      return updated;
+    });
+    if (!updated) return null;
+
+    localStorage.setItem(KEYS.history, JSON.stringify(next));
+    return updated;
+  }
+
+  function saveJournalScreenshot(id, screenshot) {
+    let updated = null;
+    const next = loadHistory().map(function (item) {
+      if (item.id !== id || !isEnteredRecord(item)) return item;
+      updated = {
+        ...item,
+        journal: normalizeJournal({
+          ...normalizeJournal(item.journal),
+          screenshot,
+          updatedAt: new Date().toISOString()
+        })
       };
       return updated;
     });
@@ -315,12 +355,14 @@
     hasMeaningfulDraft,
     loadHistory,
     isValidationEligible,
+    normalizeScreenshotMetadata,
     normalizeJournal,
     isEnteredRecord,
     saveAssessment,
     loadOpenPositions,
     loadJournalTrades,
     saveJournalReview,
+    saveJournalScreenshot,
     closePosition,
     reviewSkippedAssessment,
     getValidationSummary
