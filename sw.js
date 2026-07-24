@@ -1,4 +1,4 @@
-const CACHE = 'trading-companion-v0.8.2';
+const CACHE = 'trading-companion-v0.8.3';
 const ASSETS = [
   './',
   './index.html',
@@ -18,7 +18,7 @@ const ASSETS = [
   './icons/icon-512.png',
   './css/style.css',
   './css/style.css?v=0.8.0',
-  './css/dashboard.css',
+  './css/dashboard.css?v=0.8.3',
   './css/wizard.css',
   './css/journal.css?v=0.8.2',
   './css/stats.css',
@@ -31,9 +31,10 @@ const ASSETS = [
   './js/storage.js',
   './js/storage.js?v=0.8.0',
   './js/storage.js?v=0.8.2',
+  './js/storage.js?v=0.8.3',
   './js/media.js',
   './js/logic.js',
-  './js/dashboard.js',
+  './js/dashboard.js?v=0.8.3',
   './js/trade.js',
   './js/journal.js?v=0.8.2',
   './js/stats.js',

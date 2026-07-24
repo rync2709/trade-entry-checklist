@@ -525,6 +525,26 @@
   font-size: 10px;
 }
 
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-delete {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  padding: 10px;
+  color: var(--red);
+}
+
+.history-delete:hover {
+  border-color: rgba(255, 116, 116, 0.42);
+  background: var(--red-soft);
+  color: var(--red);
+}
+
 @media (max-width: 1100px) {
   .dashboard-prompt-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -686,6 +706,11 @@
 
   .history-grade {
     text-align: left;
+  }
+
+  .history-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .skip-review-control {

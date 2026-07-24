@@ -2,6 +2,19 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.8.3 - 2026-07-24
+
+### Added
+
+- Added a Delete action for saved NO TRADE and SKIP assessments.
+- Added permanent-deletion confirmation with Phase 1 validation impact.
+
+### Changed
+
+- Kept ENTERED Trade deletion in the Journal and non-entered assessment deletion on the Dashboard.
+- Updated Recent assessments and summary metrics immediately after deletion.
+- Updated the PWA cache for the assessment deletion release.
+
 ## v0.8.2 - 2026-07-24
 
 ### Added

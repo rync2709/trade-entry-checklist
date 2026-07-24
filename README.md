@@ -11,7 +11,7 @@ Trading Companion now combines the guided decision workflow, Trade Journal, perf
 - Repository name: Trading-Companion
 - Phase: 8 - Advanced Tools (in progress)
 - Phase 1 validation: collecting 20 real-use outcomes
-- Version: v0.8.2
+- Version: v0.8.3
 - Live app: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 1 Milestone
@@ -30,6 +30,7 @@ The first Phase 1 milestone includes:
 - Open Position tracking with WIN, LOSS, and BREAK EVEN outcomes
 - Initial lifecycle records for the future Trade Journal
 - Phase 1 validation progress with closed outcomes and reviewed skips
+- Permanent deletion for saved NO TRADE and SKIP assessments
 - Classic Checklist preserved at `checklist.html`
 
 ## Phase 2 Milestone

@@ -242,21 +242,31 @@
     return loadHistory().filter(isEnteredRecord);
   }
 
-  function deleteJournalTrade(id) {
-    const tradeId = String(id || "");
-    if (!tradeId) return null;
+  function deleteHistoryRecord(id, predicate) {
+    const recordId = String(id || "");
+    if (!recordId) return null;
 
     const history = loadHistory();
     const deleted = history.find(function (item) {
-      return String(item.id) === tradeId && isEnteredRecord(item);
+      return String(item.id) === recordId && (!predicate || predicate(item));
     }) || null;
     if (!deleted) return null;
 
     const next = history.filter(function (item) {
-      return String(item.id) !== tradeId;
+      return String(item.id) !== recordId;
     });
     localStorage.setItem(KEYS.history, JSON.stringify(next));
     return deleted;
+  }
+
+  function deleteAssessment(id) {
+    return deleteHistoryRecord(id, function (item) {
+      return !isEnteredRecord(item);
+    });
+  }
+
+  function deleteJournalTrade(id) {
+    return deleteHistoryRecord(id, isEnteredRecord);
   }
 
   function normalizeWeeklyReview(review, weekStart) {
@@ -712,6 +722,7 @@
     saveAssessment,
     loadOpenPositions,
     loadJournalTrades,
+    deleteAssessment,
     deleteJournalTrade,
     normalizeWeeklyReview,
     loadWeeklyReviews,

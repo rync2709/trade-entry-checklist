@@ -246,7 +246,31 @@
       score.textContent = `${item.result.score} / 100`;
       grade.append(gradeValue, score);
 
-      row.append(info, grade);
+      const actions = document.createElement("div");
+      actions.className = "history-actions";
+      actions.appendChild(grade);
+
+      if (!storage.isEnteredRecord(item)) {
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "button button-quiet button-danger history-delete";
+        deleteButton.dataset.deleteAssessment = item.id;
+        deleteButton.title = "ลบรายการนี้";
+        deleteButton.setAttribute(
+          "aria-label",
+          `ลบรายการ ${item.instrument || "ไม่ระบุสินทรัพย์"}`
+        );
+        const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        icon.setAttribute("class", "icon");
+        icon.setAttribute("aria-hidden", "true");
+        const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        use.setAttribute("href", "./assets/icons.svg#icon-trash");
+        icon.appendChild(use);
+        deleteButton.appendChild(icon);
+        actions.appendChild(deleteButton);
+      }
+
+      row.append(info, actions);
       list.appendChild(row);
     });
   }
@@ -430,6 +454,33 @@
   }
 
   document.addEventListener("click", function (event) {
+    const deleteButton = event.target.closest("[data-delete-assessment]");
+    if (deleteButton) {
+      const assessment = storage.loadHistory().find(function (item) {
+        return String(item.id) === deleteButton.dataset.deleteAssessment;
+      });
+      if (!assessment || storage.isEnteredRecord(assessment)) {
+        window.alert("ไม่พบรายการที่ต้องการลบ");
+        return;
+      }
+
+      const instrument = assessment.instrument || "ไม่ระบุสินทรัพย์";
+      const grade = assessment.result && assessment.result.grade ?
+        assessment.result.grade : "Assessment";
+      if (!window.confirm(
+        `ลบรายการ ${instrument} (${grade}) นี้ถาวรใช่หรือไม่?\n\n` +
+        "รายการจะถูกนำออกจาก Recent assessments และ Phase 1 validation"
+      )) return;
+
+      const deleted = storage.deleteAssessment(assessment.id);
+      if (!deleted) {
+        window.alert("ลบรายการไม่สำเร็จ กรุณาลองอีกครั้ง");
+        return;
+      }
+      render();
+      return;
+    }
+
     const closeButton = event.target.closest("[data-close-position]");
     if (closeButton) {
       const outcomeLabel = {
