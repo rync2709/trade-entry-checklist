@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.3.0
+Version: v0.3.1
 Status: Master product roadmap
 
 ## Product Direction
@@ -204,7 +204,7 @@ First milestone:
 - [x] Add Win, Loss, and Break Even distribution.
 - [x] Add Session and Setup performance breakdowns.
 - [x] Keep incomplete Actual Exit data visible without treating it as zero R.
-- [ ] Add the monthly performance calendar.
+- [x] Add the monthly performance calendar.
 - [ ] Validate statistics against a larger real-trade sample.
 
 Dashboard metrics:

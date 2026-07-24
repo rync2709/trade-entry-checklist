@@ -2,6 +2,20 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.3.1 - 2026-07-24
+
+### Added
+
+- Added the Monthly Performance Calendar with previous, next, and current-month controls.
+- Added daily Winning, Losing, Break Even, and Needs R states.
+- Added monthly Net R, Closed Trades, Active Days, and R Coverage.
+- Added Asia/Bangkok date grouping for consistent close-date reporting.
+
+### Changed
+
+- Kept the calendar on a stable six-week layout across all months.
+- Updated the PWA cache for the calendar release.
+
 ## v0.3.0 - 2026-07-24
 
 ### Added

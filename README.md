@@ -11,7 +11,7 @@ Trading Companion now combines the Phase 1 guided decision workflow, Phase 2 Tra
 - Repository name: Trading-Companion
 - Phase: 3 - Statistics (in progress)
 - Phase 1 validation: collecting 20 real-use outcomes
-- Version: v0.3.0
+- Version: v0.3.1
 - Live app: https://rync2709.github.io/Trading-Companion/
 
 ## Phase 1 Milestone
@@ -53,6 +53,8 @@ The first Phase 3 milestone includes:
 - Statistics page with 30-day, 90-day, and all-time ranges
 - Closed Trades, Win Rate, Average RR, Expectancy, Average Hold, and R Coverage
 - Equity Curve based on cumulative Realized R
+- Monthly Performance Calendar using Asia/Bangkok close dates
+- Daily Winning, Losing, Break Even, and Needs R states
 - Win, Loss, and Break Even distribution
 - Session and Setup performance breakdowns
 - Clear separation between closed outcomes and trades with a recorded Actual Exit

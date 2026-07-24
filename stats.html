@@ -104,28 +104,88 @@
     <div id="statsDetails">
       <section class="stats-primary-grid">
         <article class="panel chart-panel" aria-labelledby="equityHeading">
-        <div class="stats-panel-heading">
-          <div>
-            <h2 id="equityHeading">Equity Curve</h2>
-            <p>ผลรวม Realized R ตามลำดับการปิด Trade</p>
+          <div class="stats-panel-heading">
+            <div>
+              <h2 id="equityHeading">Equity Curve</h2>
+              <p>ผลรวม Realized R ตามลำดับการปิด Trade</p>
+            </div>
+            <div class="chart-total">
+              <span>Net result</span>
+              <strong id="netR">--</strong>
+            </div>
           </div>
-          <div class="chart-total">
-            <span>Net result</span>
-            <strong id="netR">--</strong>
-          </div>
-        </div>
-        <div class="equity-chart" id="equityChart"></div>
-        <div class="chart-footnote" id="equityFootnote">ต้องมี Actual Exit อย่างน้อย 1 รายการ</div>
+          <div class="equity-chart" id="equityChart"></div>
+          <div class="chart-footnote" id="equityFootnote">ต้องมี Actual Exit อย่างน้อย 1 รายการ</div>
         </article>
 
         <article class="panel distribution-panel" aria-labelledby="distributionHeading">
-        <div class="stats-panel-heading">
+          <div class="stats-panel-heading">
+            <div>
+              <h2 id="distributionHeading">Outcome Distribution</h2>
+              <p>จำนวน Win, Loss และ Break Even</p>
+            </div>
+          </div>
+          <div class="distribution-list" id="distributionList"></div>
+        </article>
+      </section>
+
+      <section class="section" aria-labelledby="calendarHeading">
+        <div class="calendar-section-heading">
           <div>
-            <h2 id="distributionHeading">Outcome Distribution</h2>
-            <p>จำนวน Win, Loss และ Break Even</p>
+            <h2 id="calendarHeading">Monthly Performance</h2>
+            <p>ผลการปิด Trade ตามวันในเวลา Bangkok</p>
+          </div>
+          <div class="calendar-controls">
+            <button class="button button-quiet calendar-icon-button" id="previousMonth" type="button" title="เดือนก่อน">
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-left"></use></svg>
+              <span class="sr-only">เดือนก่อน</span>
+            </button>
+            <strong class="calendar-month-label" id="calendarMonthLabel">--</strong>
+            <button class="button button-quiet calendar-icon-button" id="nextMonth" type="button" title="เดือนถัดไป">
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-right"></use></svg>
+              <span class="sr-only">เดือนถัดไป</span>
+            </button>
+            <button class="button calendar-today-button" id="currentMonth" type="button">เดือนนี้</button>
           </div>
         </div>
-        <div class="distribution-list" id="distributionList"></div>
+
+        <article class="panel calendar-panel">
+          <div class="calendar-summary" aria-label="สรุปประจำเดือน">
+            <div>
+              <span>Net result</span>
+              <strong id="calendarNetR">--</strong>
+            </div>
+            <div>
+              <span>Closed trades</span>
+              <strong id="calendarTrades">0</strong>
+            </div>
+            <div>
+              <span>Active days</span>
+              <strong id="calendarActiveDays">0</strong>
+            </div>
+            <div>
+              <span>R coverage</span>
+              <strong id="calendarCoverage">0%</strong>
+            </div>
+          </div>
+
+          <div class="calendar-weekdays" aria-hidden="true">
+            <span>จ.</span>
+            <span>อ.</span>
+            <span>พ.</span>
+            <span>พฤ.</span>
+            <span>ศ.</span>
+            <span>ส.</span>
+            <span>อา.</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid" role="grid" aria-labelledby="calendarMonthLabel"></div>
+
+          <div class="calendar-legend" aria-label="สถานะปฏิทิน">
+            <span data-calendar-state="winning"><i></i>Winning</span>
+            <span data-calendar-state="losing"><i></i>Losing</span>
+            <span data-calendar-state="break-even"><i></i>Break Even</span>
+            <span data-calendar-state="incomplete"><i></i>Needs R</span>
+          </div>
         </article>
       </section>
 

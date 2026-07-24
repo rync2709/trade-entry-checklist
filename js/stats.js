@@ -17,6 +17,7 @@
     reversal: "Reversal",
     continuation: "Continuation"
   };
+  const CALENDAR_TIME_ZONE = "Asia/Bangkok";
   const SVG_NS = "http://www.w3.org/2000/svg";
 
   function average(values) {
@@ -152,6 +153,95 @@
       });
   }
 
+  function getCalendarDateParts(value) {
+    const date = value instanceof Date ? value : new Date(value);
+    if (!Number.isFinite(date.getTime())) return null;
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: CALENDAR_TIME_ZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(date);
+    const values = {};
+    parts.forEach(function (part) {
+      if (["year", "month", "day"].includes(part.type)) {
+        values[part.type] = Number(part.value);
+      }
+    });
+    if (!values.year || !values.month || !values.day) return null;
+    return {
+      year: values.year,
+      month: values.month - 1,
+      day: values.day
+    };
+  }
+
+  function buildCalendarMonth(records, year, month) {
+    const normalizedYear = Number(year);
+    const normalizedMonth = Number(month);
+    if (
+      !Number.isInteger(normalizedYear) ||
+      !Number.isInteger(normalizedMonth) ||
+      normalizedMonth < 0 ||
+      normalizedMonth > 11
+    ) return null;
+
+    const daysInMonth = new Date(Date.UTC(
+      normalizedYear,
+      normalizedMonth + 1,
+      0
+    )).getUTCDate();
+    const firstDay = new Date(Date.UTC(normalizedYear, normalizedMonth, 1)).getUTCDay();
+    const leadingDays = (firstDay + 6) % 7;
+    const recordsByDay = new Map();
+
+    (Array.isArray(records) ? records : []).forEach(function (item) {
+      if (!item || !item.lifecycle || item.lifecycle.status !== "closed") return;
+      const dateParts = getCalendarDateParts(item.lifecycle.closedAt);
+      if (
+        !dateParts ||
+        dateParts.year !== normalizedYear ||
+        dateParts.month !== normalizedMonth
+      ) return;
+      if (!recordsByDay.has(dateParts.day)) recordsByDay.set(dateParts.day, []);
+      recordsByDay.get(dateParts.day).push(item);
+    });
+
+    const days = Array.from({ length: daysInMonth }, function (_, index) {
+      const day = index + 1;
+      const dayRecords = recordsByDay.get(day) || [];
+      const daySummary = summarize(dayRecords);
+      let state = "empty";
+      if (daySummary.total && daySummary.rrCount < daySummary.total) {
+        state = "incomplete";
+      } else if (daySummary.rrCount && daySummary.netR > 0) {
+        state = "winning";
+      } else if (daySummary.rrCount && daySummary.netR < 0) {
+        state = "losing";
+      } else if (daySummary.rrCount) {
+        state = "break-even";
+      }
+      return {
+        day,
+        state,
+        summary: daySummary
+      };
+    });
+    const monthRecords = days.flatMap(function (day) {
+      return recordsByDay.get(day.day) || [];
+    });
+
+    return {
+      year: normalizedYear,
+      month: normalizedMonth,
+      daysInMonth,
+      leadingDays,
+      days,
+      activeDays: days.filter((day) => day.summary.total > 0).length,
+      summary: summarize(monthRecords)
+    };
+  }
+
   function formatPercent(value) {
     return value === null ? "--" : `${Math.round(value)}%`;
   }
@@ -172,6 +262,21 @@
     const days = Math.floor(hours / 24);
     const remainingHours = hours % 24;
     return remainingHours ? `${days}d ${remainingHours}h` : `${days}d`;
+  }
+
+  function formatCalendarMonth(year, month) {
+    return new Intl.DateTimeFormat("th-TH", {
+      timeZone: CALENDAR_TIME_ZONE,
+      month: "long",
+      year: "numeric"
+    }).format(new Date(Date.UTC(year, month, 15, 12)));
+  }
+
+  function formatCompactR(value) {
+    if (!Number.isFinite(value)) return "--";
+    const rounded = Math.round(value * 10) / 10;
+    const prefix = rounded > 0 ? "+" : "";
+    return `${prefix}${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(1)}R`;
   }
 
   function createSvgElement(name, attributes) {
@@ -381,6 +486,91 @@
     container.appendChild(table);
   }
 
+  function renderCalendar(records, year, month) {
+    const calendar = buildCalendarMonth(records, year, month);
+    if (!calendar) return;
+    const currentDate = getCalendarDateParts(new Date());
+    const isCurrentMonth = Boolean(
+      currentDate &&
+      currentDate.year === year &&
+      currentDate.month === month
+    );
+    const label = document.getElementById("calendarMonthLabel");
+    label.textContent = formatCalendarMonth(year, month);
+
+    const netR = document.getElementById("calendarNetR");
+    netR.textContent = calendar.summary.rrCount ?
+      formatR(calendar.summary.netR, true) : "--";
+    netR.dataset.result = !calendar.summary.rrCount ? "neutral" :
+      calendar.summary.netR > 0 ? "positive" :
+        calendar.summary.netR < 0 ? "negative" : "neutral";
+    document.getElementById("calendarTrades").textContent =
+      String(calendar.summary.total);
+    document.getElementById("calendarActiveDays").textContent =
+      String(calendar.activeDays);
+    document.getElementById("calendarCoverage").textContent =
+      `${Math.round(calendar.summary.rrCoverage)}%`;
+    document.getElementById("currentMonth").disabled = isCurrentMonth;
+
+    const grid = document.getElementById("calendarGrid");
+    grid.replaceChildren();
+    const dayFormatter = new Intl.DateTimeFormat("th-TH", {
+      timeZone: CALENDAR_TIME_ZONE,
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+
+    for (let index = 0; index < 42; index += 1) {
+      const dayNumber = index - calendar.leadingDays + 1;
+      const cell = document.createElement("div");
+      cell.className = "calendar-cell";
+      cell.setAttribute("role", "gridcell");
+      if (dayNumber < 1 || dayNumber > calendar.daysInMonth) {
+        cell.dataset.outside = "true";
+        cell.setAttribute("aria-hidden", "true");
+        grid.appendChild(cell);
+        continue;
+      }
+
+      const day = calendar.days[dayNumber - 1];
+      const dayDate = new Date(Date.UTC(year, month, dayNumber, 12));
+      const dateLabel = dayFormatter.format(dayDate);
+      const isToday = Boolean(
+        isCurrentMonth &&
+        currentDate &&
+        currentDate.day === dayNumber
+      );
+      cell.dataset.calendarState = day.state;
+      cell.dataset.today = String(isToday);
+
+      const number = document.createElement("span");
+      number.className = "calendar-day-number";
+      number.textContent = String(dayNumber);
+      cell.appendChild(number);
+
+      if (day.summary.total) {
+        const result = document.createElement("strong");
+        result.className = "calendar-cell-result";
+        result.textContent = day.state === "incomplete" ?
+          "Needs R" : formatCompactR(day.summary.netR);
+        const count = document.createElement("span");
+        count.className = "calendar-cell-count";
+        count.textContent = `${day.summary.total} ${day.summary.total === 1 ? "Trade" : "Trades"}`;
+        cell.append(result, count);
+
+        const detail = day.state === "incomplete" ?
+          `${day.summary.rrCount}/${day.summary.total} Trade มี Actual Exit` :
+          `${formatR(day.summary.netR, true)}, ${day.summary.total} Trade`;
+        cell.setAttribute("aria-label", `${dateLabel}: ${detail}`);
+        cell.title = `${dateLabel} · ${detail}`;
+      } else {
+        cell.setAttribute("aria-label", `${dateLabel}: ไม่มี Closed Trade`);
+      }
+      grid.appendChild(cell);
+    }
+  }
+
   function renderStatus(summary) {
     const status = document.getElementById("dataStatus");
     const copy = document.getElementById("dataStatusText");
@@ -423,9 +613,19 @@
 
   function initializePage() {
     let selectedRange = "all";
+    const today = getCalendarDateParts(new Date());
+    let calendarYear = today ? today.year : new Date().getFullYear();
+    let calendarMonth = today ? today.month : new Date().getMonth();
+
+    function changeCalendarMonth(offset) {
+      const next = new Date(Date.UTC(calendarYear, calendarMonth + offset, 1));
+      calendarYear = next.getUTCFullYear();
+      calendarMonth = next.getUTCMonth();
+    }
 
     function render() {
       const history = window.TradingStorage.loadJournalTrades();
+      const allClosedRecords = getClosedRecords(history, "all");
       const records = getClosedRecords(history, selectedRange);
       const summary = summarize(records);
       const points = buildEquityCurve(records);
@@ -445,8 +645,9 @@
         document.getElementById("setupPerformance"),
         groupPerformance(records, "setupType", SETUP_LABELS)
       );
+      renderCalendar(allClosedRecords, calendarYear, calendarMonth);
 
-      const hasRecords = summary.total > 0;
+      const hasRecords = allClosedRecords.length > 0;
       document.getElementById("statsDetails").hidden = !hasRecords;
       document.getElementById("statsEmpty").hidden = hasRecords;
     }
@@ -460,6 +661,21 @@
         render();
       });
     });
+    document.getElementById("previousMonth").addEventListener("click", function () {
+      changeCalendarMonth(-1);
+      render();
+    });
+    document.getElementById("nextMonth").addEventListener("click", function () {
+      changeCalendarMonth(1);
+      render();
+    });
+    document.getElementById("currentMonth").addEventListener("click", function () {
+      const current = getCalendarDateParts(new Date());
+      if (!current) return;
+      calendarYear = current.year;
+      calendarMonth = current.month;
+      render();
+    });
     window.addEventListener("storage", render);
     render();
   }
@@ -472,9 +688,13 @@
     summarize,
     buildEquityCurve,
     groupPerformance,
+    getCalendarDateParts,
+    buildCalendarMonth,
     formatPercent,
     formatR,
-    formatHold
+    formatHold,
+    formatCalendarMonth,
+    formatCompactR
   };
 
   if (typeof document !== "undefined") {
