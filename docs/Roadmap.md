@@ -1,6 +1,6 @@
 # Trading OS Master Roadmap
 
-Version: v0.0.2-alpha
+Version: v0.1.0
 Status: Master product roadmap
 
 ## Product Direction
@@ -46,6 +46,22 @@ Trading OS
 Goal: replace the manual checklist with a guided trading workflow.
 
 Priority: highest.
+
+Status: In progress.
+
+First milestone:
+
+- [x] Create the core dashboard.
+- [x] Create the five-step New Trade Wizard.
+- [x] Add automatic local draft saving.
+- [x] Add initial smart states: WAITING, DEVELOPING, READY, and NO TRADE.
+- [x] Add initial score, grade, and blocking-reason logic.
+- [x] Preserve the original checklist as the Classic Checklist.
+- [x] Update the PWA shell and offline cache for Phase 1 pages.
+- [ ] Calibrate scoring weights against real trade examples.
+- [ ] Add open-position tracking.
+- [ ] Complete the Phase 1 journal handoff after entry.
+- [ ] Validate the workflow through repeated real-use sessions.
 
 ### Dashboard
 

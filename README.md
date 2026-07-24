@@ -1,34 +1,43 @@
-# Trading OS
+# Trading Companion
 
-Trading OS is an ICT/SMC decision support project built from the existing Trade Entry Checklist.
+Trading Companion is the web application for the Trading OS decision framework. It is built from the original ICT/SMC Trade Entry Checklist.
 
-The current web app remains the same lightweight checklist PWA. Phase 0 adds project documentation so the checklist logic can be turned into a rulebook, indicator specification, and future Pine Script modules without changing the current app behavior.
+Phase 1 turns the original static checklist into a guided decision workspace with a dashboard, New Trade Wizard, smart setup status, setup grade, and local assessment history.
 
 ## Current Status
 
-- Project name: Trading OS
+- Product name: Trading Companion
+- Decision framework: Trading OS
 - Repository name: Trading-Companion
-- Phase: 0 - Design and Specification
-- Version: v0.0.2-alpha
+- Phase: 1 - Core Trading App (in progress)
+- Version: v0.1.0
 - Live checklist: https://rync2709.github.io/Trading-Companion/
 
-## Phase 0 Scope
+## Phase 1 Milestone
 
-Phase 0 defines the trading system before changing the application logic.
+The first Phase 1 milestone includes:
 
-- Create a Trading Rulebook from the current checklist
-- Define indicator modules and expected outputs
-- Map checklist decisions into a future scoring and alert model
-- Keep the existing PWA and checklist behavior unchanged
+- Dashboard with active setup, current grade, session, and recent assessments
+- Guided five-step New Trade Wizard
+- Smart status: WAITING, DEVELOPING, READY, and NO TRADE
+- First score and grade model based on the Phase 0 rulebook
+- Blocking reasons for invalid setup conditions
+- Automatic local draft saving
+- Classic Checklist preserved at `checklist.html`
 
 ## Repository Structure
 
 ```text
 .
 |-- index.html
+|-- trade.html
+|-- checklist.html
 |-- manifest.json
 |-- sw.js
 |-- README.md
+|-- assets/
+|-- css/
+|-- js/
 `-- docs/
     |-- Rulebook.md
     |-- Indicator_Spec.md
@@ -43,6 +52,6 @@ Phase 0 defines the trading system before changing the application logic.
 - [Roadmap](docs/Roadmap.md): Development phases from Phase 0 to Trading OS v1
 - [Changelog](docs/Changelog.md): Version history and project changes
 
-## Behavior Note
+## Data Note
 
-This phase does not modify `index.html`, `manifest.json`, `sw.js`, local storage behavior, service worker caching, or checklist decision logic.
+Drafts and assessment history are stored only in the browser on the current device. Trading Companion does not place orders and does not send trade data to a server.

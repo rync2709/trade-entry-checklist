@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classic Checklist | Trading Companion</title>
+<style>
+:root {
+  --bg: #0b0d10;
+  --card: #15191f;
+  --card2: #1d232b;
+  --text: #f1f3f5;
+  --muted: #9aa4af;
+  --line: #2b333d;
+  --accent: #66a3ff;
+  --green: #35c98a;
+  --red: #ff6b6b;
+  --yellow: #e8bd62;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.container { max-width: 900px; margin: auto; padding: 20px 16px 50px; }
+h1 { font-size: 28px; margin: 4px 0 6px; }
+.subtitle { color: var(--muted); margin-bottom: 18px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+h2 { font-size: 19px; margin: 0 0 12px; }
+h3 { font-size: 15px; margin: 16px 0 8px; color: var(--accent); }
+.item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.item:last-child { border-bottom: 0; }
+input[type="checkbox"] {
+  width: 21px; height: 21px; margin-top: 1px; accent-color: var(--green);
+}
+label { line-height: 1.45; cursor: pointer; flex: 1; }
+.small { color: var(--muted); font-size: 13px; }
+.status {
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.status-title { font-size: 20px; font-weight: 700; }
+.progress {
+  height: 9px; background: #2a3038; border-radius: 99px; overflow: hidden; margin-top: 10px;
+}
+.bar { height: 100%; width: 0%; background: var(--green); transition: width .2s; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+button, select {
+  border: 1px solid var(--line);
+  background: var(--card2);
+  color: var(--text);
+  padding: 10px 13px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+button { cursor: pointer; }
+button:hover { border-color: var(--accent); }
+textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  background: #0f1216;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+}
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 99px;
+  font-size: 12px;
+  background: #27303a;
+  color: var(--muted);
+}
+.badge.green { color: #9af0c8; background: rgba(53,201,138,.12); }
+.badge.red { color: #ffaaaa; background: rgba(255,107,107,.12); }
+.warning {
+  border-left: 4px solid var(--yellow);
+  padding: 10px 12px;
+  background: rgba(232,189,98,.08);
+  color: #ead9aa;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+</style>
+<link rel="manifest" href="manifest.json"><link rel="icon" href="assets/app-icon.svg" type="image/svg+xml"><meta name="theme-color" content="#0b0d10"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Trading Companion">
+</head>
+<body>
+<div class="container">
+  <h1>Trade Entry Checklist</h1>
+  <div class="subtitle">HTF Narrative → POI → LTF Event → CISD → Displacement → FVG → Entry</div>
+
+  <div class="status">
+    <div class="status-title" id="status">WAITING FOR SETUP</div>
+    <div class="small" id="counter">0 / 0 conditions complete</div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="controls">
+      <select id="mode">
+        <option value="reversal">Reversal</option>
+        <option value="continuation">Continuation</option>
+      </select>
+      <button onclick="resetChecklist()">Reset Checklist</button>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>1. HTF Context — 4H / 1H</h2>
+    <div class="item"><input type="checkbox" id="htf1"><label for="htf1">ระบุ HTF Narrative / Bias ได้ชัดเจน</label></div>
+    <div class="item"><input type="checkbox" id="htf2"><label for="htf2">รู้ว่า HTF กำลังอยู่ใน Bullish หรือ Bearish context</label></div>
+    <div class="item"><input type="checkbox" id="htf3"><label for="htf3">ราคาอยู่ใน Premium / Discount ที่สอดคล้องกับ Trade Direction</label></div>
+    <div class="item"><input type="checkbox" id="htf4"><label for="htf4">มี HTF POI ที่ชัดเจน เช่น FVG / OB / Liquidity Area</label></div>
+    <div class="item"><input type="checkbox" id="htf5"><label for="htf5">POI มี Confluence เพิ่ม เช่น Fibonacci / Liquidity / Displacement</label></div>
+  </section>
+
+  <section class="card">
+    <h2>2. ราคาเข้าสู่ POI</h2>
+    <div class="item"><input type="checkbox" id="poi1"><label for="poi1">ราคาแตะหรือเข้าใกล้ HTF POI ที่วางแผนไว้</label></div>
+    <div class="item"><input type="checkbox" id="poi2"><label for="poi2">ยังไม่มีการ Invalidate POI</label></div>
+    <div class="item"><input type="checkbox" id="poi3"><label for="poi3">ไม่ได้ไล่ราคาไกลจาก POI มากเกินไป</label></div>
+  </section>
+
+  <section class="card">
+    <h2>3. LTF Context</h2>
+    <div class="item"><input type="checkbox" id="ltf1"><label for="ltf1">กำหนด LTF Structure ก่อนหน้าได้แล้ว</label></div>
+    <div class="item"><input type="checkbox" id="ltf2"><label for="ltf2">รู้ว่า Setup นี้เป็น <b>Reversal</b> หรือ <b>Continuation</b></label></div>
+    <div class="item"><input type="checkbox" id="ltf3"><label for="ltf3">มี Liquidity ที่เหมาะสมให้ราคา Sweep / Raid</label></div>
+  </section>
+
+  <section class="card">
+    <h2>4. Confirmation Events — Flexible Order</h2>
+    <div class="small">เหตุการณ์เหล่านี้ไม่จำเป็นต้องเกิดตามลำดับตายตัว แต่ต้องอยู่ใน Context / Setup Window เดียวกัน</div>
+
+    <h3>Liquidity</h3>
+    <div class="item"><input type="checkbox" id="event1"><label for="event1">มี Liquidity Sweep / Raid ที่สนับสนุน Direction</label></div>
+
+    <h3>Structure</h3>
+    <div class="item"><input type="checkbox" id="event2"><label for="event2">Reversal: เกิด MSS / CHoCH ไปทาง Trade Direction</label></div>
+    <div class="item"><input type="checkbox" id="event3"><label for="event3">Continuation: เกิด BOS ไปทาง Trade Direction</label></div>
+
+    <h3>CISD</h3>
+    <div class="item"><input type="checkbox" id="event4"><label for="event4">เกิด CISD ไปทางเดียวกับ Trade Direction</label></div>
+
+    <div class="warning">
+      CISD, Sweep และ MSS/BOS สามารถเกิดก่อนหรือหลังกันได้ ไม่จำเป็นต้องใช้ลำดับตายตัว แต่ต้องไม่ห่างกันจนกลายเป็นคนละ Setup
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>5. Displacement Confirmation</h2>
+    <div class="item"><input type="checkbox" id="disp1"><label for="disp1">หลังจาก Confirmation Event มี Displacement ที่ชัดเจน</label></div>
+    <div class="item"><input type="checkbox" id="disp2"><label for="disp2">Displacement ไปในทิศทางเดียวกับ CISD / Trade Direction</label></div>
+    <div class="item"><input type="checkbox" id="disp3"><label for="disp3">Displacement ไม่ใช่แค่แท่งใหญ่จากข่าวหรือ Wick ที่ไม่มี Follow-through</label></div>
+  </section>
+
+  <section class="card">
+    <h2>6. FVG / Entry Zone</h2>
+    <div class="item"><input type="checkbox" id="fvg1"><label for="fvg1">Displacement สร้าง FVG ที่ชัดเจน</label></div>
+    <div class="item"><input type="checkbox" id="fvg2"><label for="fvg2">FVG เกิดภายใน Confirmation Window เดียวกัน</label></div>
+    <div class="item"><input type="checkbox" id="fvg3"><label for="fvg3">ราคากลับมา Retrace เข้า FVG / Entry Zone</label></div>
+    <div class="item"><input type="checkbox" id="fvg4"><label for="fvg4">FVG ยังไม่ถูก Mitigate / Invalidate มากเกินไป</label></div>
+  </section>
+
+  <section class="card">
+    <h2>7. Entry Decision</h2>
+    <div class="item"><input type="checkbox" id="entry1"><label for="entry1">มี Entry Trigger บน Execution TF (เช่น Sweep / MSS / BOS / Reaction)</label></div>
+    <div class="item"><input type="checkbox" id="entry2"><label for="entry2">SL อยู่ในจุดที่ Setup ถูก Invalidate จริง</label></div>
+    <div class="item"><input type="checkbox" id="entry3"><label for="entry3">RR ผ่านเกณฑ์ขั้นต่ำของแผน</label></div>
+    <div class="item"><input type="checkbox" id="entry4"><label for="entry4">ยังไม่ได้เข้าเพราะ FOMO / Revenge Trade / ต้องการเอาคืน</label></div>
+  </section>
+
+  <section class="card">
+    <h2>Trade Notes</h2>
+    <textarea id="notes" placeholder="เขียนเหตุผลของ Setup, HTF POI, ลำดับ Event, จุด Entry และเหตุผลที่ยกเลิก Setup..."></textarea>
+  </section>
+</div>
+
+<script>
+const all = [...document.querySelectorAll('input[type="checkbox"]')];
+
+function update() {
+  const checked = all.filter(x => x.checked).length;
+  const total = all.length;
+  const pct = Math.round(checked / total * 100);
+  document.getElementById('counter').textContent = `${checked} / ${total} conditions complete (${pct}%)`;
+  document.getElementById('bar').style.width = pct + '%';
+
+  const mode = document.getElementById('mode').value;
+  const core = ['htf1','htf2','htf3','htf4','poi1','ltf1','ltf2','event4','disp1','disp2','fvg1','fvg3','entry1','entry2','entry3','entry4'];
+  const structure = mode === 'reversal' ? 'event2' : 'event3';
+
+  const ready = core.every(id => document.getElementById(id).checked)
+                && document.getElementById(structure).checked;
+
+  const status = document.getElementById('status');
+  if (ready) {
+    status.textContent = '✅ SETUP READY — REVIEW & EXECUTE';
+    status.style.color = 'var(--green)';
+  } else if (checked >= 8) {
+    status.textContent = '🟡 SETUP DEVELOPING — WAIT';
+    status.style.color = 'var(--yellow)';
+  } else {
+    status.textContent = '⏳ WAITING FOR SETUP';
+    status.style.color = 'var(--text)';
+  }
+  localStorage.setItem('tradeChecklist', JSON.stringify({
+    checks: all.map(x => x.checked),
+    mode,
+    notes: document.getElementById('notes').value
+  }));
+}
+
+function resetChecklist() {
+  all.forEach(x => x.checked = false);
+  document.getElementById('notes').value = '';
+  update();
+}
+
+all.forEach(x => x.addEventListener('change', update));
+document.getElementById('mode').addEventListener('change', update);
+document.getElementById('notes').addEventListener('input', update);
+
+const saved = JSON.parse(localStorage.getItem('tradeChecklist') || 'null');
+if (saved) {
+  all.forEach((x,i) => x.checked = !!saved.checks[i]);
+  document.getElementById('mode').value = saved.mode || 'reversal';
+  document.getElementById('notes').value = saved.notes || '';
+}
+update();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+}
+</script>
+
+</body>
+</html>

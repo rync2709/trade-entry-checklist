@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e1112">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Trading Companion">
+  <title>New Trade | Trading Companion</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/wizard.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html" aria-label="Trading Companion Dashboard">
+        <img src="assets/app-icon.svg" alt="">
+        <span class="brand-copy">
+          <span class="brand-name">Trading Companion</span>
+          <span class="brand-phase">Trading OS · Phase 1</span>
+        </span>
+      </a>
+
+      <nav class="topnav" aria-label="เมนูหลัก">
+        <a class="nav-link" href="index.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-home"></use></svg>
+          Dashboard
+        </a>
+        <a class="nav-link" href="trade.html" aria-current="page">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+          New Trade
+        </a>
+        <a class="nav-link" href="checklist.html">
+          <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
+          Classic Checklist
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <header class="page-heading">
+      <p class="eyebrow">Guided decision</p>
+      <h1>New Trade</h1>
+      <p class="lede">ประเมินจาก HTF ไปสู่ Entry ทีละขั้น ระบบจะบอกสถานะ ขั้นตอนถัดไป และเงื่อนไขที่ทำให้ต้องหยุด</p>
+    </header>
+
+    <div class="wizard-shell">
+      <div class="wizard-main">
+        <section class="panel setup-meta" aria-label="ข้อมูล Setup">
+          <div class="field">
+            <label for="instrument">สินทรัพย์</label>
+            <select id="instrument">
+              <option value="XAUUSD">XAUUSD · Gold</option>
+              <option value="BTCUSD">BTCUSD · Bitcoin</option>
+              <option value="ETHUSD">ETHUSD · Ethereum</option>
+              <option value="NAS100">NAS100 · Nasdaq</option>
+              <option value="EURUSD">EURUSD</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="session">Session</label>
+            <select id="session">
+              <option value="auto">Auto / ยังไม่ระบุ</option>
+              <option value="asia">Asia</option>
+              <option value="london">London</option>
+              <option value="new-york">New York</option>
+            </select>
+          </div>
+        </section>
+
+        <div class="panel step-tabs" role="tablist" aria-label="ขั้นตอนประเมิน">
+          <button class="step-tab" type="button" role="tab" data-step="0" aria-selected="true">
+            <span class="step-number">1</span><span class="step-label">HTF</span>
+          </button>
+          <button class="step-tab" type="button" role="tab" data-step="1" aria-selected="false">
+            <span class="step-number">2</span><span class="step-label">POI</span>
+          </button>
+          <button class="step-tab" type="button" role="tab" data-step="2" aria-selected="false">
+            <span class="step-number">3</span><span class="step-label">Setup</span>
+          </button>
+          <button class="step-tab" type="button" role="tab" data-step="3" aria-selected="false">
+            <span class="step-number">4</span><span class="step-label">Confirm</span>
+          </button>
+          <button class="step-tab" type="button" role="tab" data-step="4" aria-selected="false">
+            <span class="step-number">5</span><span class="step-label">Entry</span>
+          </button>
+        </div>
+
+        <section class="panel step-panel" role="tabpanel" data-active="true">
+          <header class="step-header">
+            <p class="eyebrow">Step 1</p>
+            <h2>HTF Narrative</h2>
+            <p>เริ่มจาก 4H และ 1H ให้รู้ว่ากำลังมองหาอะไร ก่อนลงไปหา Trigger บน LTF</p>
+          </header>
+          <div class="decision-list">
+            <div class="decision-row">
+              <div>
+                <span class="question-label">ทิศทางของแผนนี้คืออะไร?</span>
+                <span class="question-help">LTF ไม่ควรเปลี่ยน Bias ที่ได้จาก HTF</span>
+              </div>
+              <div class="segment" data-options="3" aria-label="ทิศทาง">
+                <button class="choice" type="button" data-field="direction" data-value="bullish" aria-pressed="false">Bullish</button>
+                <button class="choice" type="button" data-field="direction" data-value="bearish" aria-pressed="false">Bearish</button>
+                <button class="choice" type="button" data-field="direction" data-value="neutral" aria-pressed="false">No Bias</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">อธิบาย HTF Narrative ได้ชัดเจนหรือยัง?</span>
+                <span class="question-help">ต้องอธิบายเหตุผลได้ ไม่ใช่เลือกทิศทางจากความรู้สึก</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="htfNarrative" data-value="yes" aria-pressed="false">ใช่</button>
+                <button class="choice" type="button" data-answer-key="htfNarrative" data-value="no" aria-pressed="false">ยัง</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">4H และ 1H สอดคล้องกับ Trade Direction หรือไม่?</span>
+                <span class="question-help">หากขัดแย้งกัน ให้หยุดและรอ Context ชัดขึ้น</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="htfAligned" data-value="yes" aria-pressed="false">ใช่</button>
+                <button class="choice" type="button" data-answer-key="htfAligned" data-value="no" aria-pressed="false">ไม่ใช่</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">ราคาอยู่ใน Premium / Discount ที่สนับสนุนแผนหรือไม่?</span>
+                <span class="question-help">หลีกเลี่ยงการเปิดแผนกลาง Range โดยไม่มีตำแหน่งที่ได้เปรียบ</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="priceLocation" data-value="yes" aria-pressed="false">ใช่</button>
+                <button class="choice" type="button" data-answer-key="priceLocation" data-value="no" aria-pressed="false">ไม่ใช่</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel step-panel" role="tabpanel" data-active="false">
+          <header class="step-header">
+            <p class="eyebrow">Step 2</p>
+            <h2>Point of Interest</h2>
+            <p>แผนจะเริ่มทำงานเมื่อราคาเข้าใกล้ POI ที่กำหนดไว้และ POI ยังไม่ถูกทำลาย</p>
+          </header>
+          <div class="decision-list">
+            <div class="decision-row">
+              <div>
+                <span class="question-label">มี HTF POI ที่ชัดเจนหรือไม่?</span>
+                <span class="question-help">เช่น FVG, Order Block, Breaker หรือ Liquidity Area</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="poiPresent" data-value="yes" aria-pressed="false">มี</button>
+                <button class="choice" type="button" data-answer-key="poiPresent" data-value="no" aria-pressed="false">ยังไม่มี</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">ราคาแตะหรือเข้าใกล้ POI แล้วหรือยัง?</span>
+                <span class="question-help">หากยังไม่ถึง ให้รอโดยไม่ลดเงื่อนไขของแผน</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="poiReached" data-value="yes" aria-pressed="false">ถึงแล้ว</button>
+                <button class="choice" type="button" data-answer-key="poiReached" data-value="no" aria-pressed="false">ยัง</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">POI ยัง Valid อยู่หรือไม่?</span>
+                <span class="question-help">POI ที่ถูก Invalidate แล้วไม่ควรถูกใช้เพียงเพราะราคาเคยตอบสนอง</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="poiValid" data-value="yes" aria-pressed="false">Valid</button>
+                <button class="choice" type="button" data-answer-key="poiValid" data-value="no" aria-pressed="false">Invalid</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">ยังไม่ไล่ราคาออกจาก POI ใช่หรือไม่?</span>
+                <span class="question-help">หาก Move เกิดไปแล้ว ให้รอ Pullback หรือยกเลิก Setup</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="notChasing" data-value="yes" aria-pressed="false">ใช่</button>
+                <button class="choice" type="button" data-answer-key="notChasing" data-value="no" aria-pressed="false">กำลังไล่</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel step-panel" role="tabpanel" data-active="false">
+          <header class="step-header">
+            <p class="eyebrow">Step 3</p>
+            <h2>Setup Context</h2>
+            <p>จำแนกว่าเป็น Reversal หรือ Continuation และกำหนดโครงสร้างกับ Liquidity ที่ต้องติดตาม</p>
+          </header>
+          <div class="decision-list">
+            <div class="decision-row">
+              <div>
+                <span class="question-label">Setup นี้เป็นแบบใด?</span>
+                <span class="question-help">ประเภท Setup จะเปลี่ยน Structure Confirmation ที่ต้องใช้</span>
+              </div>
+              <div class="segment" data-options="2" aria-label="ประเภท Setup">
+                <button class="choice" type="button" data-field="setupType" data-value="reversal" aria-pressed="false">Reversal</button>
+                <button class="choice" type="button" data-field="setupType" data-value="continuation" aria-pressed="false">Continuation</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">กำหนด LTF Structure ก่อนหน้าได้แล้วหรือยัง?</span>
+                <span class="question-help">ต้องรู้ Swing และโครงสร้างที่ราคาจะต้องเปลี่ยนหรือทำต่อ</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="ltfMapped" data-value="yes" aria-pressed="false">ได้แล้ว</button>
+                <button class="choice" type="button" data-answer-key="ltfMapped" data-value="no" aria-pressed="false">ยัง</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">มี Liquidity Target ที่เหมาะสมให้ราคา Sweep / Raid หรือไม่?</span>
+                <span class="question-help">เช่น Session high/low, PDH/PDL, equal highs/lows</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="liquidityTarget" data-value="yes" aria-pressed="false">มี</button>
+                <button class="choice" type="button" data-answer-key="liquidityTarget" data-value="no" aria-pressed="false">ยังไม่มี</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel step-panel" role="tabpanel" data-active="false">
+          <header class="step-header">
+            <p class="eyebrow">Step 4</p>
+            <h2>Confirmation</h2>
+            <p>Sweep, Structure และ CISD เกิดสลับลำดับกันได้ แต่ต้องอยู่ใน Context Window เดียวกัน</p>
+          </header>
+          <div class="decision-list">
+            <div class="decision-row">
+              <div>
+                <span class="question-label">มี Liquidity Sweep / Raid ที่สนับสนุน Direction แล้วหรือยัง?</span>
+                <span class="question-help">Sweep ควรเกิดใกล้ POI และสัมพันธ์กับแผนเดียวกัน</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="sweep" data-value="yes" aria-pressed="false">มีแล้ว</button>
+                <button class="choice" type="button" data-answer-key="sweep" data-value="no" aria-pressed="false">ยัง</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label" id="structureLabel">เกิด MSS / CHOCH ไปทางเดียวกับ Trade Direction แล้วหรือยัง?</span>
+                <span class="question-help" id="structureHelp">Reversal ใช้ MSS หรือ CHOCH เพื่อยืนยันการเปลี่ยนทิศ</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="structureShift" data-value="yes" aria-pressed="false">เกิดแล้ว</button>
+                <button class="choice" type="button" data-answer-key="structureShift" data-value="no" aria-pressed="false">ยัง</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">เกิด CISD ไปทางเดียวกับ Trade Direction แล้วหรือยัง?</span>
+                <span class="question-help">CISD เพียงอย่างเดียวยังไม่พอ ต้องมี Context และ Follow-through</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="cisd" data-value="yes" aria-pressed="false">เกิดแล้ว</button>
+                <button class="choice" type="button" data-answer-key="cisd" data-value="no" aria-pressed="false">ยัง</button>
+              </div>
+            </div>
+            <div class="decision-row">
+              <div>
+                <span class="question-label">เหตุการณ์ทั้งหมดอยู่ใน Setup Window เดียวกันหรือไม่?</span>
+                <span class="question-help">หากห่างกันจนเป็นคนละ Idea ต้องเริ่มประเมิน Context ใหม่</span>
+              </div>
+              <div class="choice-group">
+                <button class="choice" type="button" data-answer-key="setupWindow" data-value="yes" aria-pressed="false">ใช่</button>
+                <button class="choice" type="button" data-answer-key="setupWindow" data-value="no" aria-pressed="false">ไม่ใช่</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel step-panel" role="tabpanel" data-active="false">
+          <header class="step-header">
+            <p class="eyebrow">Step 5</p>
+            <h2>Entry &amp; Risk</h2>
+            <p>ยืนยัน Intent, Entry Zone และความเสี่ยงครั้งสุดท้ายก่อนบันทึกแผน</p>
+          </header>
+          <div class="decision-list">
+            <div class="decision-row">
+              <div><span class="question-label">มี Displacement ที่ชัดเจนหรือไม่?</span><span class="question-help">Body และ Range ควรขยายพร้อมปิดผ่าน Structure ที่เกี่ยวข้อง</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="displacement" data-value="yes" aria-pressed="false">มี</button><button class="choice" type="button" data-answer-key="displacement" data-value="no" aria-pressed="false">ยังไม่มี</button></div>
+            </div>
+            <div class="decision-row">
+              <div><span class="question-label">Displacement มี Follow-through และไม่ใช่เพียง News Wick ใช่หรือไม่?</span><span class="question-help">แท่งใหญ่ที่ไม่มีการไปต่อไม่ถือเป็น Strong Displacement</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="displacementClean" data-value="yes" aria-pressed="false">ใช่</button><button class="choice" type="button" data-answer-key="displacementClean" data-value="no" aria-pressed="false">ไม่ใช่</button></div>
+            </div>
+            <div class="decision-row">
+              <div><span class="question-label">Displacement สร้าง FVG ที่ยัง Valid หรือไม่?</span><span class="question-help">ใช้ FVG ที่เกิดจาก Intent เดียวกับ Setup เท่านั้น</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="validFvg" data-value="yes" aria-pressed="false">Valid</button><button class="choice" type="button" data-answer-key="validFvg" data-value="no" aria-pressed="false">ยังไม่มี</button></div>
+            </div>
+            <div class="decision-row">
+              <div><span class="question-label">ราคากลับมา Retrace เข้า Entry Zone แล้วหรือยัง?</span><span class="question-help">ไม่เข้าเทรดกลาง Move โดยไม่มี Pullback</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="retrace" data-value="yes" aria-pressed="false">แล้ว</button><button class="choice" type="button" data-answer-key="retrace" data-value="no" aria-pressed="false">ยัง</button></div>
+            </div>
+            <div class="decision-row">
+              <div><span class="question-label">มี Entry Trigger บน Execution TF หรือไม่?</span><span class="question-help">เช่น Sweep, MSS/BOS หรือ Reaction ที่กำหนดไว้ในแผน</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="entryTrigger" data-value="yes" aria-pressed="false">มี</button><button class="choice" type="button" data-answer-key="entryTrigger" data-value="no" aria-pressed="false">ยังไม่มี</button></div>
+            </div>
+            <div class="decision-row">
+              <div><span class="question-label">Stop Loss อยู่ที่จุดที่ Setup ถูก Invalidate จริงหรือไม่?</span><span class="question-help">SL ต้องสะท้อนความผิดของ Trade Idea ไม่ใช่แค่ระยะที่อยากเสีย</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="slValid" data-value="yes" aria-pressed="false">ใช่</button><button class="choice" type="button" data-answer-key="slValid" data-value="no" aria-pressed="false">ไม่ใช่</button></div>
+            </div>
+            <div class="decision-row">
+              <div><span class="question-label">RR ผ่านเกณฑ์ขั้นต่ำของแผนหรือไม่?</span><span class="question-help">ถ้า RR ไม่ผ่าน Setup ต้องเป็น NO TRADE แม้ Confirmation จะครบ</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="rrValid" data-value="yes" aria-pressed="false">ผ่าน</button><button class="choice" type="button" data-answer-key="rrValid" data-value="no" aria-pressed="false">ไม่ผ่าน</button></div>
+            </div>
+            <div class="decision-row">
+              <div><span class="question-label">การตัดสินใจครั้งนี้ปลอดจาก FOMO / Revenge Trade หรือไม่?</span><span class="question-help">ตอบตามจริง เพราะเงื่อนไขนี้มีสิทธิ์ยกเลิกแผนทันที</span></div>
+              <div class="choice-group"><button class="choice" type="button" data-answer-key="emotionalClear" data-value="yes" aria-pressed="false">ปลอด</button><button class="choice" type="button" data-answer-key="emotionalClear" data-value="no" aria-pressed="false">ไม่ปลอด</button></div>
+            </div>
+            <div class="decision-row">
+              <div class="field" style="width: 100%;">
+                <label for="notes">Trade notes</label>
+                <textarea id="notes" placeholder="HTF narrative, POI, ลำดับ Confirmation, Entry และเหตุผลที่ยกเลิก Setup..."></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="wizard-footer panel" style="margin-top: 14px;">
+          <span class="save-state" id="saveState">บันทึกอัตโนมัติ</span>
+          <div class="wizard-footer-group">
+            <button class="button" id="backButton" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-left"></use></svg>
+              <span>ย้อนกลับ</span>
+            </button>
+            <button class="button button-primary" id="nextButton" type="button">
+              <span>ถัดไป</span>
+              <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-arrow-right"></use></svg>
+            </button>
+            <button class="button" id="saveButton" type="button" hidden></button>
+          </div>
+        </footer>
+
+        <footer class="wizard-footer panel" style="margin-top: 14px;">
+          <button class="button button-quiet button-danger" id="resetButton" type="button">
+            <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-rotate"></use></svg>
+            ล้าง Draft
+          </button>
+          <span class="muted" style="font-size: 11px;">ระบบนี้ช่วยทบทวน ไม่ได้ส่งคำสั่งซื้อขาย</span>
+        </footer>
+      </div>
+
+      <aside class="panel status-rail" aria-label="ผลการประเมินปัจจุบัน">
+        <section class="rail-section">
+          <span class="status-pill" id="railStatePill" data-state="waiting">
+            <span class="status-dot"></span><span class="pill-copy">WAITING FOR SETUP</span>
+          </span>
+          <div class="rail-state" id="railState">WAITING FOR SETUP</div>
+          <p class="rail-next" id="railNext">เลือกทิศทางของแผน</p>
+        </section>
+        <section class="rail-section">
+          <div class="rail-label">Current grade</div>
+          <div class="rail-score"><strong id="railGrade">--</strong><span id="railScore">0 / 100</span></div>
+        </section>
+        <section class="rail-section">
+          <div class="rail-label">Progress</div>
+          <div class="progress-copy"><span>Setup maturity</span><span id="railProgressCopy">0 / 24</span></div>
+          <div class="progress-track"><div class="progress-value" id="railProgress"></div></div>
+        </section>
+        <section class="rail-section">
+          <div class="rail-label">Blocking reasons</div>
+          <ul class="blocking-list" id="blockerList"></ul>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <nav class="mobile-nav" aria-label="เมนูมือถือ">
+    <a class="nav-link" href="index.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-home"></use></svg>
+      Dashboard
+    </a>
+    <a class="nav-link" href="trade.html" aria-current="page">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-plus"></use></svg>
+      New Trade
+    </a>
+    <a class="nav-link" href="checklist.html">
+      <svg class="icon" aria-hidden="true"><use href="./assets/icons.svg#icon-list-checks"></use></svg>
+      Checklist
+    </a>
+  </nav>
+
+  <script src="js/storage.js"></script>
+  <script src="js/logic.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/trade.js"></script>
+</body>
+</html>

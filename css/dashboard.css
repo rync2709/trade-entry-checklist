@@ -1,0 +1,314 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.8fr);
+  gap: 16px;
+}
+
+.decision-panel {
+  min-height: 286px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.decision-topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.decision-state {
+  margin: 22px 0 6px;
+  font-size: 27px;
+  line-height: 1.18;
+}
+
+.decision-next {
+  margin: 0;
+  color: var(--amber);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.decision-progress {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.progress-copy {
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.decision-actions {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.grade-panel {
+  min-height: 286px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.grade-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.grade-value {
+  margin: 16px 0 2px;
+  color: var(--green);
+  font-size: 74px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.grade-value[data-grade="no-trade"] {
+  color: var(--red);
+  font-size: 34px;
+  line-height: 1.12;
+}
+
+.grade-score {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.grade-note {
+  margin: auto 0 0;
+  padding-top: 20px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.metric {
+  min-height: 112px;
+  padding: 18px;
+  border-right: 1px solid var(--line);
+}
+
+.metric:last-child {
+  border-right: 0;
+}
+
+.metric-label {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.metric-value {
+  overflow-wrap: anywhere;
+  font-size: 25px;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.metric-footnote {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.pipeline {
+  padding: 0 18px;
+}
+
+.pipeline-row {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pipeline-row:last-child {
+  border-bottom: 0;
+}
+
+.pipeline-index {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.pipeline-row[data-complete="true"] .pipeline-index {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.pipeline-copy strong {
+  display: block;
+  font-size: 13px;
+}
+
+.pipeline-copy span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.pipeline-state {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.history-list {
+  padding: 0 18px;
+}
+
+.history-item {
+  min-height: 76px;
+  padding: 13px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.history-item:last-child {
+  border-bottom: 0;
+}
+
+.history-primary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-primary strong {
+  font-size: 14px;
+}
+
+.history-meta {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.history-grade {
+  text-align: right;
+}
+
+.history-grade strong {
+  display: block;
+  color: var(--green);
+  font-size: 20px;
+}
+
+.history-grade span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+@media (max-width: 840px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-panel {
+    min-height: 210px;
+  }
+
+  .grade-value {
+    font-size: 58px;
+  }
+}
+
+@media (max-width: 600px) {
+  .decision-panel,
+  .grade-panel {
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .decision-state {
+    margin-top: 18px;
+    font-size: 22px;
+  }
+
+  .grade-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .grade-value {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin: 0;
+    font-size: 50px;
+  }
+
+  .grade-value[data-grade="no-trade"] {
+    font-size: 25px;
+  }
+
+  .grade-note {
+    display: none;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric {
+    min-height: 86px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .metric:last-child {
+    border-bottom: 0;
+  }
+
+  .pipeline {
+    padding: 0 13px;
+  }
+
+  .pipeline-row {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .pipeline-state {
+    display: none;
+  }
+}

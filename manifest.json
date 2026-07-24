@@ -1,10 +1,24 @@
 {
-  "name": "Trade Entry Checklist",
-  "short_name": "Trade Checklist",
+  "id": "./",
+  "name": "Trading Companion",
+  "short_name": "Trading OS",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#0b0d10",
-  "theme_color": "#0b0d10",
-  "description": "ICT / SMC HTF to LTF trade entry checklist",
-  "icons": []
+  "background_color": "#0e1112",
+  "theme_color": "#0e1112",
+  "description": "ICT / SMC decision support workspace for guided trade planning",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }

@@ -2,6 +2,23 @@
 
 All notable changes to Trading OS will be documented in this file.
 
+## v0.1.0 - 2026-07-24
+
+### Added
+
+- Added the Trading Companion dashboard as the new app home.
+- Added a guided five-step New Trade Wizard.
+- Added the first Decision Engine for setup state, next action, score, grade, and blocking reasons.
+- Added automatic draft saving and local assessment history.
+- Added responsive desktop and mobile layouts.
+- Added a Trading Companion app mark and reusable interface icons.
+
+### Changed
+
+- Updated the PWA name, theme, and offline asset cache for Phase 1.
+- Moved the original Trade Entry Checklist to `checklist.html` and kept its existing local storage behavior.
+- Updated the project status from Phase 0 complete to Phase 1 in progress.
+
 ## v0.0.2-alpha - 2026-07-24
 
 ### Changed
